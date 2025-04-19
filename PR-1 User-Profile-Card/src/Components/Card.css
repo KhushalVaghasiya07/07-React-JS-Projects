@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f7f9fc;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  align-items: center;
+}
+
+.profile-card {
+  background: #ffffff;
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.profile-img {
+  transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+  transform: scale(1.05);
+}
+
+.profile-img img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e5e7eb;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.profile-img img:hover {
+  border-color: #6366f1;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.profile-card:hover h1 {
+  color: #6366f1;
+}
+
+.title {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.location {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+  font-weight: 400;
+  transition: all 0.3s ease;
+}
+
+.location:hover {
+  color: #111827;
+  transform: translateX(5px);
+}
+
+.info h5 {
+  font-size: 14px;
+  color: #374151;
+  margin: 8px 0;
+  text-align: left;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.info h5:hover {
+  background-color: #f3f4f6;
+  transform: translateX(3px);
+}
+
+.skills {
+  margin: 25px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.skills span {
+  background: #f3f4f6;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.skills span:hover {
+  background: #6366f1;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  background: #111827;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #6366f1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.container {
+  width: 1300px;
+}

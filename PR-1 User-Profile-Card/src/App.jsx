@@ -12,6 +12,7 @@ import image6 from "./assets/Vishal.jpg"
 
 function App() {
   return (
+    
     <div class="Profile-card">
       <div className="container">
         <div className="row user-card">

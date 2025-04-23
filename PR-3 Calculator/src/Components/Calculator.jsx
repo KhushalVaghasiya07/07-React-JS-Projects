@@ -10,10 +10,12 @@ const Calculator = () => {
   };
 
   const calculateResult = () => {
-    try {
-      setInput(eval(input).toString());
-    } catch (error) {
-      setInput('Error');
+    if (input === "") {
+      setInput("Error");
+    } 
+    else {
+      const result = eval(input); 
+      setInput(result.toString()); 
     }
   };
 

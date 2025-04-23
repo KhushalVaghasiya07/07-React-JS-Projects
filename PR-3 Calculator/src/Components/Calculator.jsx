@@ -37,13 +37,13 @@ const Calculator = () => {
         </div>
         <div className="button-grid">
           {buttons.map((item, index) => (
-            <button
-              key={index}
-              className={`calc-button ${isNaN(item) ? 'operator' : 'number'} ${item === '0' ? 'zero' : ''}`}
-              onClick={() => handleButtonClick(item)}
-            >
-              {item}
-            </button>
+           <button
+           key={index}
+           className="calc-button"
+           onClick={() => handleButtonClick(item)}
+         >
+           {item}
+         </button>
           ))}
           <button className="calc-button clear" onClick={clearInput}>
             C

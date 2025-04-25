@@ -35,6 +35,7 @@ const Calculator = () => {
             placeholder="0"
           />
         </div>
+        
         <div className="button-grid">
           {buttons.map((item, index) => (
            <button

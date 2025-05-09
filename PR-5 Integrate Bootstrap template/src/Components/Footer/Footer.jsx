@@ -1,6 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import './Footer.css';
-import footerlogo from '../../../public/Images/footer-logo-2.png';
+import footerlogo from '../../assets/images/footer-logo-2.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLocationDot,

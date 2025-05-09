@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import about1 from '../../../public/Images/about-1.jpg';
+import about1 from '../../assets/images/about-1.jpg';
 import './Brand-intro.css';
 import { CgArrowTopRight } from 'react-icons/cg';
 

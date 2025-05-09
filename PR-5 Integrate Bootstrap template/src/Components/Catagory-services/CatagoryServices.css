@@ -1,4 +1,4 @@
-.Contact-description{
+.Contact-description {
     padding: 90px 15px 85px;
     margin: 0 auto;
     max-width: 700px;
@@ -6,11 +6,10 @@
 
 .T-shirt-image {
 
-    background-image: url("../../../public//Images/chooseus-bg-1.jpg");
+    background-image: url("../../assets/images/chooseus-bg-1.jpg");
     height: 100%;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
     width: 100%;
-  }
-  
+}

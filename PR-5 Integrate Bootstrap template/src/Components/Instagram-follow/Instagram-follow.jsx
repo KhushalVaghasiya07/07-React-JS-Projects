@@ -1,12 +1,12 @@
-import { Container } from 'react-bootstrap';
-import Maintitlebar from '../MainHeadertext';
-import separator1 from '../../../public/Images/separator-1.png';
-import './Instagram-follow.css';
-import instaprofile1 from '../../../public/Images/instagram-9.jpg';
-import instaprofile2 from '../../../public/Images/instagram-10.jpg';
-import instaprofile3 from '../../../public/Images/instagram-7.jpg';
-import instaprofile4 from '../../../public/Images/instagram-8.jpg';
 import { useEffect, useRef, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import instaprofile2 from '../../assets/images/instagram-10.jpg';
+import instaprofile3 from '../../assets/images/instagram-7.jpg';
+import instaprofile4 from '../../assets/images/instagram-8.jpg';
+import instaprofile1 from '../../assets/images/instagram-9.jpg';
+import separator1 from '../../assets/images/separator-1.png';
+import Maintitlebar from '../Head-design/MainHeadertext';
+import './Instagram-follow.css';
 
 const InstagramFollow = () => {
   const instaPosts = [

@@ -10,6 +10,7 @@ import { IoSearch } from 'react-icons/io5';
 import { FaRegHeart, FaRegUser } from 'react-icons/fa';
 import { PiShoppingCart } from 'react-icons/pi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import logo from '../../assets/images/logo.png';
 
 function NavbarSection() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
@@ -29,7 +30,7 @@ function NavbarSection() {
             <div className="Navbar-logo">
               <Navbar.Brand href="#" className="m-0">
                 <div className="Navbar-logo">
-                  <img src="./public/Images/logo.png" alt="" />
+                  <img src={logo} alt="" />
                 </div>
               </Navbar.Brand>
             </div>

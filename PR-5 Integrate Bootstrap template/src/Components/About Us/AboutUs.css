@@ -1,5 +1,5 @@
   .aboutus-bg-pattern {
-    background-image: url('/Images/page-title.jpg');
+    background-image: url('../../assets/images/page-title.jpg');
     animation: slide 100s linear infinite;
   }
 

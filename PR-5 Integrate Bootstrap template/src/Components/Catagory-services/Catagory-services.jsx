@@ -1,12 +1,11 @@
-import chooseusbg1 from '../../../public/Images/chooseus-bg-1.jpg';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import hourssupport from '../../assets/images/24-hours-support.png';
+import reloadicon from '../../assets/images/reload.png';
+import securePayment from '../../assets/images/secure-payment.png';
+import seperator3 from '../../assets/images/separator-3.png';
+import vehicleicon from '../../assets/images/vehicle.png';
+import Maintitlebar from '../Head-design/MainHeadertext';
 import './CatagoryServices.css';
-import vehicleicon from '../../../public/Images/vehicle.png';
-import hourssupport from '../../../public/Images/24-hours-support.png';
-import securePayment from '../../../public/Images/secure-payment.png';
-import reloadicon from '../../../public/Images/reload.png';
-import Maintitlebar from '../MainHeadertext';
-import seperator3 from '../../../public/Images/separator-3.png';
 
 const Storeservices = (props) => {
   return (

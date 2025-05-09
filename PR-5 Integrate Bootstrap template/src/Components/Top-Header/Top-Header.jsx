@@ -77,7 +77,7 @@ const TopHeader = () => {
                 style={{ margin: '0', color: '#222222' }}
               >
                 <img
-                  src="/public/Images/icon-lang.png"
+                  src="/public/images/icon-lang.png"
                   style={{ height: '16px' }}
                   alt=""
                 />

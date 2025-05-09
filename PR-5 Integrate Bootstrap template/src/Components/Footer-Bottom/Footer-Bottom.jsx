@@ -1,8 +1,8 @@
 import { Container } from 'react-bootstrap';
-import Payment1 from '../../../public/Images/card-1.png';
-import Payment2 from '../../../public/Images/card-2.png';
-import Payment3 from '../../../public/Images/card-3.png';
-import Payment4 from '../../../public/Images/card-4.png';
+import Payment1 from '../../assets/images/card-1.png';
+import Payment2 from '../../assets/images/card-2.png';
+import Payment3 from '../../assets/images/card-3.png';
+import Payment4 from '../../assets/images/card-4.png';
 import {
   FaFacebookF,
   FaGooglePlusG,

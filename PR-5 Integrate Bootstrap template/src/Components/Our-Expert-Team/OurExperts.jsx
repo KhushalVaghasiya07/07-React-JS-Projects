@@ -1,10 +1,10 @@
-import Maintitlebar from '../MainHeadertext';
+import { Col, Container, Row } from 'react-bootstrap';
+import separator1 from '../../assets/images/separator-1.png';
+import team1 from '../../assets/images/team-1.jpg';
+import team2 from '../../assets/images/team-2.jpg';
+import team3 from '../../assets/images/team-3.jpg';
+import Maintitlebar from '../Head-design/MainHeadertext';
 import './OurExperts.css';
-import separator1 from '../../../public/Images/separator-1.png';
-import { Container, Row, Col } from 'react-bootstrap';
-import team1 from '../../../public/Images/team-1.jpg';
-import team2 from '../../../public/Images/team-2.jpg';
-import team3 from '../../../public/Images/team-3.jpg';
 
 const ExpertsCard = (props) => {
   return (

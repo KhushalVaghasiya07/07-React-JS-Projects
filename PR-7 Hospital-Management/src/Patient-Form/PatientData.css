@@ -1,0 +1,56 @@
+/* Add these styles to your existing PatientData.css */
+.btn-view {
+  color: #fff;
+  background-color: #157347;
+  border-color: #157347;
+}
+
+.btn-view:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
+.patient-data-container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.patient-data-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.patient-data-header {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.table-patient th {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-action {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Modal specific styles */
+.modal-body h5 {
+  color: #157347;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.modal-body p {
+  margin-bottom: 0.8rem;
+}

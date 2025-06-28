@@ -28,6 +28,15 @@ export const productListReducer = (state = productListState, action) => {
         products: [],
       };
 
+      case "FETCH_PRODUCTS_REQUEST":
+        return { ...state, loading: true };
+
+      case "FETCH_PRODUCTS_SUCCESS":
+        return { ...state, loading: false, products: action.payload };
+
+      case "FETCH_PRODUCTS_FAIL":
+        return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }
@@ -87,4 +96,3 @@ export const productCategoryReducer = (state = categoryProductState, action) => 
       return state;
   }
 };
-

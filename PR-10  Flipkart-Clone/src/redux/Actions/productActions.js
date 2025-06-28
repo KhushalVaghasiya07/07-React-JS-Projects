@@ -13,6 +13,8 @@ export const FETCH_PRODUCTS_REQUEST = "FETCH_PRODUCTS_REQUEST";
 export const FETCH_PRODUCTS_SUCCESS = "FETCH_PRODUCTS_SUCCESS";
 export const FETCH_PRODUCTS_FAIL = "FETCH_PRODUCTS_FAIL";
 
+
+
 const generateShortId = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -41,6 +43,24 @@ export const updateProductData = (id, product) => async (dispatch) => {
     dispatch({ type: UPDATE_PRODUCT, payload: { id, ...product } });
   } catch (error) {
     console.error("Update failed:", error);
+  }
+};
+
+export const fetchAllProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_PRODUCTS_REQUEST });
+
+    const response = await axios.get("http://localhost:5000/products");
+
+    dispatch({
+      type: FETCH_PRODUCTS_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: FETCH_PRODUCTS_FAIL,
+      payload: error.message,
+    });
   }
 };
 

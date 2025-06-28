@@ -49,9 +49,12 @@ const CategoryCarousel = ({ title, category, showAd }) => {
 
   const handleDelete = (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      dispatch(deleteProduct(productId));
+      dispatch(deleteProduct(productId)).then(() => {
+        dispatch(fetchProductsByCategory(category)); // 👈 re-fetch updated list
+      });
     }
   };
+
 
   return (
     <div className="electronics-wrapper">
@@ -88,17 +91,24 @@ const CategoryCarousel = ({ title, category, showAd }) => {
                               <span className="discount">{item.discount}% off</span>
                             )}
                           </div>
+
+                          {/* Action buttons moved inside product-details below price */}
+                          <div className="action-links">
+                            <button className="action-btn" onClick={(e) => {
+                              e.preventDefault();
+                              handleEdit(item);
+                            }}>
+                              <FiEdit size={16} />
+                            </button>
+                            <button className="action-btn" onClick={(e) => {
+                              e.preventDefault();
+                              handleDelete(item.id);
+                            }}>
+                              <FiTrash2 size={16} />
+                            </button>
+                          </div>
                         </div>
                       </Link>
-
-                      <div className="action-links">
-                        <span onClick={() => handleEdit(item)}>
-                          <FiEdit size={18} />
-                        </span>
-                        <span onClick={() => handleDelete(item.id)}>
-                          <FiTrash2 size={18} />
-                        </span>
-                      </div>
                     </div>
                   </Col>
                 ))}

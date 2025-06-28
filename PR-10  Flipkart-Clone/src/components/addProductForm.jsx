@@ -3,6 +3,7 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import "./addProductForm.css";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from 'react-router-dom';
 import {
   fetchProductById,
   addNewProduct,
@@ -13,9 +14,9 @@ const AddProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const isEditMode = Boolean(id);
-  const { product } = useSelector((state) => state.productReducer);
+  const location = useLocation();
+  const product = location.state?.product || null;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,85 +66,98 @@ const AddProduct = () => {
   };
 
   return (
-    <Container className="add-product-form mt-5">
-      <h2 className="mb-4">{isEditMode ? "Edit Product" : "Add New Product"}</h2>
-      <Form onSubmit={handleSubmit} className="shadow p-4 bg-white rounded">
-        <Row className="mb-3">
-          <Col md={6}>
-            <Form.Group controlId="productName">
-              <Form.Label>Product Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="productPrice">
-              <Form.Label>Price</Form.Label>
-              <Form.Control
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+    <Container className="add-product-form mt-4">
+      <div className="d-flex justify-content-center mb-4">
+        <h2 className="form-title">{isEditMode ? "Edit Product" : "Add New Product"}</h2>
+      </div>
 
-        <Row className="mb-3">
-          <Col md={6}>
-            <Form.Group controlId="productCategory">
-              <Form.Label>Category</Form.Label>
-              <Form.Select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-              >
-                <option value="">-- Select Category --</option>
-                {categories.map((cat, idx) => (
-                  <option key={idx} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="productImage">
-              <Form.Label>Image URL</Form.Label>
-              <Form.Control
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+      <Form onSubmit={handleSubmit} className="flipkart-form">
+        <div className="form-header">
+          {isEditMode ? "EDIT PRODUCT DETAILS" : "ADD NEW PRODUCT"}
+        </div>
 
-        <Form.Group className="mb-3" controlId="productDesc">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="desc"
-            value={formData.desc}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+        <div className="form-body p-4">
+          <Row className="mb-4">
+            <Col md={6} className="mb-3 mb-md-0">
+              <Form.Group controlId="productName">
+                <Form.Label>Product Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter product name"
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="productPrice">
+                <Form.Label>Price (₹)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="Enter price"
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <div className="text-end">
-          <Button variant="primary" type="submit">
-            {isEditMode ? "Update Product" : "Add Product"}
-          </Button>
+          <Row className="mb-4">
+            <Col md={6} className="mb-3 mb-md-0">
+              <Form.Group controlId="productCategory">
+                <Form.Label>Category</Form.Label>
+                <Form.Select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((cat, idx) => (
+                    <option key={idx} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group controlId="productImage">
+                <Form.Label>Image URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="Paste image URL"
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Form.Group className="mb-4" controlId="productDesc">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              name="desc"
+              value={formData.desc}
+              onChange={handleChange}
+              placeholder="Enter product description"
+              required
+            />
+          </Form.Group>
+
+          <div className="d-flex justify-content-center">
+            <Button variant="primary" type="submit" className="submit-btn">
+              {isEditMode ? "UPDATE PRODUCT" : "ADD PRODUCT"}
+            </Button>
+          </div>
         </div>
       </Form>
     </Container>

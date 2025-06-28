@@ -13,7 +13,7 @@
       "id": "2",
       "name": "Kindle Paperwhite",
       "desc": "6″ e-reader with built-in light and waterproof.",
-      "price": "8499",
+      "price": "9000",
       "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/cases-covers/flip-cover/h/s/o/ea16-magnetic-lock-flip-cover-protective-stand-case-for-kindle-original-imahcqgynvzxgvcz.jpeg?q=70",
       "category": "Electronics",
       "quantity": 10
@@ -433,29 +433,12 @@
       "quantity": 14
     },
     {
-      "id": "50",
-      "name": "Smartphone Tripod",
-      "desc": "Adjustable mini tripod for mobiles.",
-      "price": "999",
-      "image": "https://rukminim2.flixcart.com/image/612/612/xif0q/tripod/tripod/6/5/y/66-inch-tripod-lightweight-adjustable-portable-stand-for-camera-original-imah8hgnrx2mruvg.jpeg?q=70",
-      "category": "Electronics",
-      "quantity": 16
-    },
-    {
       "id": "53",
       "name": "Rise",
       "price": "200",
       "category": "Grocery",
       "desc": "asdasdasdasdasd",
       "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKZbWveTRDdK_wjGJ_yvdbSRirThPKeRS6TQ&s"
-    },
-    {
-      "id": "266854",
-      "name": "asdfasdf",
-      "price": "12",
-      "category": "Electronics",
-      "desc": "asdfadfadsf",
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT12Z4XIxkWK9dw103LzzzHN8P_DVLnjTnl5w&s"
     }
   ]
 }

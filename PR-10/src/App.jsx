@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/CartPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
-import ExploreMore from './pages/ExploreMore.jsx';
+// import ExploreMore from './pages/ExploreMore.jsx';
 import AddProductForm from './components/addProductForm';
 import Header from './components/Navbar.jsx';
 import Footer from "./components/Footer.jsx";
@@ -31,22 +31,23 @@ const App = () => {
   }, [dispatch]);
 
   return (
-      <div className="d-flex flex-column min-vh-100">
-        <Header />
-        <main className="flex-grow-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/explore/:category" element={<ExploreMore />} />
-            <Route path="/add_product" element={<AddProductForm />} />
+    <div className="d-flex flex-column min-vh-100">
+      <Header />
+      <main className="flex-grow-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          {/* <Route path="/explore/:category" element={<ExploreMore />} /> */}
+          <Route path="/add_product" element={<AddProductForm />} />
+          <Route path="/add-product/:id" element={<AddProductForm />} />
 
-            {/* Error handling routes */}
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+          {/* Error handling routes */}
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 };
 

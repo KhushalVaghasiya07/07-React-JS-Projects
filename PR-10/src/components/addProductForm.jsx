@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "./addProductForm.css"; // Create and style it like Flipkart UI
+import { useNavigate, useParams } from "react-router-dom";
+import "./addProductForm.css";
+
+// Custom 6-digit ID generator
+const generateShortId = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 const AddProduct = () => {
-
+  const { id } = useParams();
   const navigate = useNavigate();
+  const isEditMode = Boolean(id);
 
   const [product, setProduct] = useState({
     name: "",
@@ -23,8 +29,22 @@ const AddProduct = () => {
     "Beauty",
     "Home",
     "Toys",
-    "Grocery"
+    "Grocery",
   ];
+
+  // Load product data if in edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      axios
+        .get(`http://localhost:5000/products/${id}`)
+        .then((res) => setProduct(res.data))
+        .catch((err) => {
+          console.error("Error fetching product:", err);
+          alert("Failed to load product data");
+          navigate("/");
+        });
+    }
+  }, [id, isEditMode, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,31 +54,33 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Fetch existing data to generate unique new ID
-      const res = await axios.get("http://localhost:5000/products");
-      const newId = res.data.length + 1;
+      if (isEditMode) {
+        await axios.put(`http://localhost:5000/products/${id}`, product);
+        alert("Product updated successfully!");
+      } else {
+        // Generate unique 6-digit ID
+        let newId;
+        const res = await axios.get("http://localhost:5000/products");
+        let isUnique = false;
+        while (!isUnique) {
+          newId = generateShortId();
+          isUnique = !res.data.find((item) => item.id === newId);
+        }
 
-      const newProduct = { id: newId.toString(), ...product };
-
-      // POST to JSON Server
-      await axios.post("http://localhost:5000/products", newProduct);
-
-      alert("Product added successfully!");
-
-      // Clear form fields
-      setProduct({ name: "", price: "", category: "", desc: "", image: "" });
-
-      // Navigate to homepage
+        const newProduct = { id: newId, ...product };
+        await axios.post("http://localhost:5000/products", newProduct);
+        alert("Product added successfully!");
+      }
       navigate("/");
     } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Failed to add product.");
+      console.error("Error saving product:", error);
+      alert("Failed to save product.");
     }
   };
 
   return (
     <Container className="add-product-form mt-5">
-      <h2 className="mb-4">Add New Product</h2>
+      <h2 className="mb-4">{isEditMode ? "Edit Product" : "Add New Product"}</h2>
       <Form onSubmit={handleSubmit} className="shadow p-4 bg-white rounded">
         <Row className="mb-3">
           <Col md={6}>
@@ -99,7 +121,9 @@ const AddProduct = () => {
               >
                 <option value="">-- Select Category --</option>
                 {categories.map((cat, idx) => (
-                  <option key={idx} value={cat}>{cat}</option>
+                  <option key={idx} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </Form.Select>
             </Form.Group>
@@ -132,7 +156,7 @@ const AddProduct = () => {
 
         <div className="text-end">
           <Button variant="primary" type="submit">
-            Add Product
+            {isEditMode ? "Update Product" : "Add Product"}
           </Button>
         </div>
       </Form>

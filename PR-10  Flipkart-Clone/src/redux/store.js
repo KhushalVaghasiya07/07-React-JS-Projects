@@ -1,9 +1,21 @@
-import { createStore } from 'redux';
-import reducers from './Reducers';
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import {thunk} from "redux-thunk";
 
-const store = createStore(
-  reducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import {
+  productListReducer,
+  productDetailsReducer,
+  productCategoryReducer,
+} from "./Reducers/productReducer";
+
+import { cartReducer } from "./Reducers/cartReducer";
+
+const rootReducer = combineReducers({
+  productList: productListReducer,
+  productDetails: productDetailsReducer,
+  productCategory: productCategoryReducer,
+  cart: cartReducer
+});
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;

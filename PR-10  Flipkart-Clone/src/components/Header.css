@@ -14,6 +14,14 @@
   max-width: 900px;
 }
 
+.right-side{
+  flex-basis: 60%;
+}
+.right-side img{
+  height: 60px;
+  width: 140px;
+}
+
 .search-input {
   border: none;
   outline: none;

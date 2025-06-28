@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import "./addProductForm.css";
-
-// Custom 6-digit ID generator
-const generateShortId = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProductById,
+  addNewProduct,
+  updateProductData,
+} from "../redux/Actions/productActions";
 
 const AddProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const isEditMode = Boolean(id);
+  const dispatch = useDispatch();
 
-  const [product, setProduct] = useState({
+  const isEditMode = Boolean(id);
+  const { product } = useSelector((state) => state.productReducer);
+
+  const [formData, setFormData] = useState({
     name: "",
     price: "",
     category: "",
@@ -32,50 +35,33 @@ const AddProduct = () => {
     "Grocery",
   ];
 
-  // Load product data if in edit mode
   useEffect(() => {
     if (isEditMode) {
-      axios
-        .get(`http://localhost:5000/products/${id}`)
-        .then((res) => setProduct(res.data))
-        .catch((err) => {
-          console.error("Error fetching product:", err);
-          alert("Failed to load product data");
-          navigate("/");
-        });
+      dispatch(fetchProductById(id));
     }
-  }, [id, isEditMode, navigate]);
+  }, [dispatch, id, isEditMode]);
+
+  useEffect(() => {
+    if (isEditMode && product) {
+      setFormData(product);
+    }
+  }, [product, isEditMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      if (isEditMode) {
-        await axios.put(`http://localhost:5000/products/${id}`, product);
-        alert("Product updated successfully!");
-      } else {
-        // Generate unique 6-digit ID
-        let newId;
-        const res = await axios.get("http://localhost:5000/products");
-        let isUnique = false;
-        while (!isUnique) {
-          newId = generateShortId();
-          isUnique = !res.data.find((item) => item.id === newId);
-        }
-
-        const newProduct = { id: newId, ...product };
-        await axios.post("http://localhost:5000/products", newProduct);
-        alert("Product added successfully!");
-      }
-      navigate("/");
-    } catch (error) {
-      console.error("Error saving product:", error);
-      alert("Failed to save product.");
+    if (isEditMode) {
+      dispatch(updateProductData(id, formData));
+      alert("Product updated successfully!");
+    } else {
+      dispatch(addNewProduct(formData));
+      alert("Product added successfully!");
     }
+    navigate("/");
   };
 
   return (
@@ -89,7 +75,7 @@ const AddProduct = () => {
               <Form.Control
                 type="text"
                 name="name"
-                value={product.name}
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
@@ -101,7 +87,7 @@ const AddProduct = () => {
               <Form.Control
                 type="number"
                 name="price"
-                value={product.price}
+                value={formData.price}
                 onChange={handleChange}
                 required
               />
@@ -115,7 +101,7 @@ const AddProduct = () => {
               <Form.Label>Category</Form.Label>
               <Form.Select
                 name="category"
-                value={product.category}
+                value={formData.category}
                 onChange={handleChange}
                 required
               >
@@ -134,7 +120,7 @@ const AddProduct = () => {
               <Form.Control
                 type="text"
                 name="image"
-                value={product.image}
+                value={formData.image}
                 onChange={handleChange}
                 required
               />
@@ -148,7 +134,7 @@ const AddProduct = () => {
             as="textarea"
             rows={3}
             name="desc"
-            value={product.desc}
+            value={formData.desc}
             onChange={handleChange}
             required
           />

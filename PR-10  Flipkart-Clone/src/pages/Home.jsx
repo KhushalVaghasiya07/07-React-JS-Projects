@@ -8,6 +8,7 @@ import Slider_6 from "../assets/Slider-6.webp";
 import Slider_7 from "../assets/Slider-7.webp";
 import Slider_8 from "../assets/Slider-8.webp";
 import CategoryCarousel from "../components/CategoryCarousel";
+import CategorySlider from '../components/CategorySlider';
 
 
 const Home = () => {
@@ -25,7 +26,8 @@ const Home = () => {
 
   return (
     <div className="bg-light pb-4">
-      {/* Banner Carousel */}
+
+      <CategorySlider/>
       <Carousel className="mb-4 custom-carousel" interval={3000} slide={true}>
         {sliderImages.map((img, index) => (
           <Carousel.Item key={index}>
@@ -45,7 +47,7 @@ const Home = () => {
       </Carousel>
 
 
-      <CategoryCarousel title="Best of Electronics" category="electronics" showAd={true} itemsPerPage={6} />
+      <CategoryCarousel  oryCarousel title="Best of Electronics" category="electronics" showAd={true} itemsPerPage={6} />
       <CategoryCarousel title="Beauty, Food, Toys & more" category="Grocery" itemsPerPage={7} />
       <CategoryCarousel title="Fashion Clearance" category="fashion" itemsPerPage={7} />
 

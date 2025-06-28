@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
-import { CgProfile } from 'react-icons/cg';
 import { BsCart3, BsThreeDotsVertical } from 'react-icons/bs';
 import { CiShop } from 'react-icons/ci';
 import { Button, NavDropdown } from 'react-bootstrap';
@@ -28,7 +27,7 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
     <header className="header-container p-3">
       <div className="header-top d-flex justify-content-between align-items-center container">
         {/* Logo & Search */}
-        <div className="d-flex align-items-center gap-3">
+        <div className="d-flex align-items-center right-side gap-3">
           <Link to="/">
             <img src={logo} alt="logo" width="90" />
           </Link>

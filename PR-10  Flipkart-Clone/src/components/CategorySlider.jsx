@@ -60,6 +60,7 @@ function CategorySlider() {
               key={index}
               className="category-slider-item"
               onMouseEnter={() => item.hasArrow && setHovered(item.text)}
+              onMouseLeave={() => setHovered(null)}
             >
               <img src={item.img} alt={item.text} className="slider-img" />
               <div className="title-row">
@@ -68,7 +69,11 @@ function CategorySlider() {
               </div>
 
               {hovered === item.text && (
-                <div className="single-dropdown">
+                <div
+                  className="single-dropdown"
+                  onMouseEnter={() => setHovered(item.text)}
+                  onMouseLeave={() => setHovered(null)}
+                >
                   {dropdownData[item.text]?.map((d, i) => (
                     <div key={i} className="dropdown-item">{d}</div>
                   ))}

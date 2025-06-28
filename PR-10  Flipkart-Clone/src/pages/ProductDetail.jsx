@@ -1,48 +1,73 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from '../redux/Actions';
-import { Container, Row, Col, Button, Badge, Alert } from 'react-bootstrap';
-import { StarFill, StarHalf, Heart, HeartFill, Truck, ShieldCheck, ArrowLeft } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
-import "./ExploreMore.css"
+import { fetchProductById } from '../redux/Actions/productActions';
+import { addToCart } from '../redux/Actions/cartActions';
+import {
+  Container, Row, Col, Button, Badge, Alert, Spinner
+} from 'react-bootstrap';
+import {
+  StarFill, StarHalf, Heart, HeartFill,
+  Truck, ShieldCheck, ArrowLeft
+} from 'react-bootstrap-icons';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = useSelector(state => state.products.find(p => p.id === id));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isWishlisted, setIsWishlisted] = React.useState(false);
 
-  if (!product) return (
-    <Container className="my-5">
-      <Alert variant="danger" className="text-center">
-        Product not found
-      </Alert>
-    </Container>
-  );
+  const { product, loading, error } = useSelector(state => state.productDetails);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // Calculate rating stars
+  useEffect(() => {
+    dispatch(fetchProductById(id));
+  }, [dispatch, id]);
+
   const renderRatingStars = (rating) => {
     const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<StarFill key={`full-${i}`} className="text-warning" />);
-    }
-
-    if (hasHalfStar) {
-      stars.push(<StarHalf key="half" className="text-warning" />);
-    }
-
-    const emptyStars = 5 - stars.length;
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(<StarFill key={`empty-${i}`} className="text-secondary" />);
-    }
-
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    for (let i = 0; i < full; i++) stars.push(<StarFill key={`f-${i}`} className="text-warning" />);
+    if (half) stars.push(<StarHalf key="half" className="text-warning" />);
+    for (let i = stars.length; i < 5; i++) stars.push(<StarFill key={`e-${i}`} className="text-secondary" />);
     return stars;
   };
+
+  if (loading) {
+    return (
+      <Container className="my-5 text-center">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="my-5">
+        <Alert variant="danger" className="text-center">
+          Error loading product: {error}
+        </Alert>
+        <Button variant="light" onClick={() => navigate(-1)} className="mt-3">
+          <ArrowLeft /> Back to Products
+        </Button>
+      </Container>
+    );
+  }
+
+  if (!product) {
+    return (
+      <Container className="my-5">
+        <Alert variant="warning" className="text-center">
+          Product not found
+        </Alert>
+        <Button variant="light" onClick={() => navigate(-1)} className="mt-3">
+          <ArrowLeft /> Back to Products
+        </Button>
+      </Container>
+    );
+  }
 
   return (
     <Container className="my-5 product-detail">
@@ -51,7 +76,6 @@ const ProductDetail = () => {
       </Button>
 
       <Row className="g-4">
-        {/* Product Images */}
         <Col md={6}>
           <div className="border rounded-3 p-3 mb-3 text-center">
             <img
@@ -77,38 +101,29 @@ const ProductDetail = () => {
           </Row>
         </Col>
 
-        {/* Product Info */}
         <Col md={6}>
           <div className="d-flex justify-content-between align-items-start">
             <div>
               <h1 className="mb-2">{product.name}</h1>
               <div className="d-flex align-items-center mb-3">
-                <div className="me-2">
-                  {renderRatingStars(product.rating || 4.5)}
-                </div>
+                <div className="me-2">{renderRatingStars(product.rating || 4.5)}</div>
                 <span className="text-muted">({product.reviews || 124} reviews)</span>
               </div>
             </div>
-            <Button
-              variant="outline-danger"
-              onClick={() => setIsWishlisted(!isWishlisted)}
-              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            >
+            <Button variant="outline-danger" onClick={() => setIsWishlisted(!isWishlisted)}>
               {isWishlisted ? <HeartFill /> : <Heart />}
             </Button>
           </div>
 
-          <div className="mb-4">
-            <h2 className="text-primary mb-0">₹{product.price.toLocaleString()}</h2>
-            {product.originalPrice && (
-              <del className="text-muted ms-2">₹{product.originalPrice.toLocaleString()}</del>
-            )}
-            {product.discount && (
-              <Badge bg="success" className="ms-2">{product.discount}% OFF</Badge>
-            )}
-          </div>
+          <h2 className="text-primary mb-0">₹{product.price?.toLocaleString()}</h2>
+          {product.originalPrice && (
+            <del className="text-muted ms-2">₹{product.originalPrice.toLocaleString()}</del>
+          )}
+          {product.discount && (
+            <Badge bg="success" className="ms-2">{product.discount}% OFF</Badge>
+          )}
 
-          <div className="mb-4">
+          <div className="mb-3 mt-4">
             <h5>Description</h5>
             <p className="text-muted">{product.desc}</p>
           </div>
@@ -116,15 +131,11 @@ const ProductDetail = () => {
           {product.features && (
             <div className="mb-4">
               <h5>Features</h5>
-              <ul>
-                {product.features.map((feature, index) => (
-                  <li key={index}>{feature}</li>
-                ))}
-              </ul>
+              <ul>{product.features.map((f, i) => <li key={i}>{f}</li>)}</ul>
             </div>
           )}
 
-          <div className="d-flex flex-wrap gap-2 mb-4">
+          <div className="d-flex gap-3 mb-4">
             <div className="d-flex align-items-center me-3">
               <Truck className="text-success me-2" size={20} />
               <span>Free Delivery</span>
@@ -135,13 +146,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="d-flex flex-wrap gap-3 mb-4">
-            <div className="quantity-selector">
-              <Button variant="outline-secondary" size="sm">-</Button>
-              <span className="px-3">1</span>
-              <Button variant="outline-secondary" size="sm">+</Button>
-            </div>
-
+          <div className="d-flex gap-3 mb-4">
             <Button
               variant="primary"
               size="lg"
@@ -150,50 +155,14 @@ const ProductDetail = () => {
             >
               Add to Cart
             </Button>
-
-            <Button
-              variant="outline-primary"
-              size="lg"
-              className="flex-grow-1"
-            >
+            <Button variant="outline-primary" size="lg" className="flex-grow-1">
               Buy Now
             </Button>
           </div>
 
-          <Alert variant="info" className="mt-4">
+          <Alert variant="info">
             <strong>Special Offer:</strong> Get 5% cashback on orders above ₹5000
           </Alert>
-        </Col>
-      </Row>
-
-      {/* Additional Sections */}
-      <Row className="mt-5">
-        <Col>
-          <div className="border-top pt-4">
-            <h4>Product Specifications</h4>
-            <table className="table">
-              <tbody>
-                <tr>
-                  <td className="text-muted">Brand</td>
-                  <td>{product.brand || 'Generic'}</td>
-                </tr>
-                <tr>
-                  <td className="text-muted">Model</td>
-                  <td>{product.model || 'Standard'}</td>
-                </tr>
-                <tr>
-                  <td className="text-muted">Availability</td>
-                  <td className="text-success">In Stock ({product.stock || 25} units)</td>
-                </tr>
-                {product.specifications?.map((spec, index) => (
-                  <tr key={index}>
-                    <td className="text-muted">{spec.key}</td>
-                    <td>{spec.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </Col>
       </Row>
     </Container>

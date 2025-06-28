@@ -1,10 +1,8 @@
-// Product actions
 export const setProducts = (products) => ({
   type: "SET_PRODUCTS",
   payload: products
 });
 
-// Cart actions
 export const addToCart = (product, quantity = 1) => ({
   type: "ADD_TO_CART",
   payload: { ...product, quantity }

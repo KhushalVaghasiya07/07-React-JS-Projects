@@ -1,43 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Container, Row, Col, Button, Card, Badge,
   Form, Alert, Image, ListGroup, Modal
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  X, Plus, Dash, ShieldCheck, Truck, CreditCard,
+  X, Plus, Dash, ShieldCheck, Truck,
   ArrowLeft, Gift, Tag, CheckCircle
 } from "react-bootstrap-icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+} from "../redux/Actions/cartActions";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
-
-  const updateCart = (updatedItems) => {
-    setCartItems(updatedItems);
-    localStorage.setItem("cart", JSON.stringify(updatedItems));
-  };
 
   const handleQuantityChange = (id, action) => {
-    const updatedCart = cartItems.map(item => {
-      if (item.id === id) {
-        const newQuantity = action === 'increase'
-          ? (item.quantity || 1) + 1
-          : Math.max(1, (item.quantity || 1) - 1);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    });
-    updateCart(updatedCart);
+    dispatch(updateQuantity(id, action));
   };
 
   const prepareRemoveItem = (id) => {
@@ -46,15 +37,17 @@ const CartPage = () => {
   };
 
   const handleRemove = () => {
-    const updatedCart = cartItems.filter(item => item.id !== itemToRemove);
-    updateCart(updatedCart);
+    if (itemToRemove === "all") {
+      dispatch(clearCart());
+    } else {
+      dispatch(removeFromCart(itemToRemove));
+    }
     setShowRemoveModal(false);
   };
 
   const applyCoupon = () => {
     if (couponCode.trim() === "") return;
     setCouponApplied(true);
-    // Here you would typically validate the coupon with your backend
   };
 
   const removeCoupon = () => {
@@ -68,7 +61,7 @@ const CartPage = () => {
   };
 
   const calculateDiscount = () => {
-    return couponApplied ? Math.floor(calculateTotal() * 0.1) : 0; // 10% discount for demo
+    return couponApplied ? Math.floor(calculateTotal() * 0.1) : 0;
   };
 
   const calculateFinalTotal = () => {
@@ -89,11 +82,7 @@ const CartPage = () => {
           />
           <h4 className="my-3">Your cart is empty!</h4>
           <p className="text-muted mb-4">Add items to it now.</p>
-          <Button
-            variant="primary"
-            onClick={() => navigate("/")}
-            className="px-4"
-          >
+          <Button variant="primary" onClick={() => navigate("/")}>
             <ArrowLeft className="me-2" /> Shop Now
           </Button>
         </div>
@@ -118,8 +107,8 @@ const CartPage = () => {
           </Row>
 
           <Row>
-            {/* Cart Items Column */}
-            <Col lg={8} className="pe-lg-4">
+            {/* Cart Items */}
+            <Col lg={8}>
               <Card className="border-0 shadow-sm mb-3">
                 <Card.Body className="p-0">
                   <ListGroup variant="flush">
@@ -150,7 +139,6 @@ const CartPage = () => {
                               </Button>
                             </div>
                             <p className="text-muted small mb-2">{item.desc}</p>
-
                             <div className="d-flex align-items-center mb-2">
                               <Badge bg="success" className="me-2">
                                 {item.discount || 10}% OFF
@@ -159,18 +147,17 @@ const CartPage = () => {
                                 {item.offer || "Special price"}
                               </span>
                             </div>
-
-                            <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex justify-content-between align-items-center">
                               <div className="d-flex align-items-center quantity-selector">
                                 <Button
                                   variant="outline-secondary"
                                   size="sm"
                                   onClick={() => handleQuantityChange(item.id, 'decrease')}
-                                  disabled={(item.quantity || 1) <= 1}
+                                  disabled={item.quantity <= 1}
                                 >
                                   <Dash />
                                 </Button>
-                                <span className="px-3">{item.quantity || 1}</span>
+                                <span className="px-3">{item.quantity}</span>
                                 <Button
                                   variant="outline-secondary"
                                   size="sm"
@@ -179,9 +166,8 @@ const CartPage = () => {
                                   <Plus />
                                 </Button>
                               </div>
-
                               <h5 className="mb-0 text-primary">
-                                ₹{(item.price * (item.quantity || 1)).toLocaleString()}
+                                ₹{(item.price * item.quantity).toLocaleString()}
                                 {item.originalPrice && (
                                   <small className="text-muted ms-2">
                                     <del>₹{item.originalPrice}</del>
@@ -196,8 +182,53 @@ const CartPage = () => {
                   </ListGroup>
                 </Card.Body>
               </Card>
+            </Col>
 
-              <Card className="border-0 shadow-sm">
+            {/* Summary */}
+            <Col lg={4}>
+              <Card className="border-0 shadow-sm sticky-top" style={{ top: "20px" }}>
+                <Card.Body>
+                  <h5 className="mb-3">Price Details ({cartItems.length} Items)</h5>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Total MRP</span>
+                    <span>₹{calculateTotal().toLocaleString()}</span>
+                  </div>
+
+                  {couponApplied && (
+                    <div className="d-flex justify-content-between mb-2 text-success">
+                      <span>Discount</span>
+                      <span>-₹{calculateDiscount().toLocaleString()}</span>
+                    </div>
+                  )}
+
+                  <div className="d-flex justify-content-between mb-2">
+                    <span>Delivery Charges</span>
+                    <span>
+                      {deliveryCharge === 0
+                        ? <span className="text-success">FREE</span>
+                        : `₹${deliveryCharge}`}
+                    </span>
+                  </div>
+
+                  <hr />
+
+                  <div className="d-flex justify-content-between mb-3 fw-bold">
+                    <span>Total Amount</span>
+                    <span>₹{(calculateFinalTotal() + deliveryCharge).toLocaleString()}</span>
+                  </div>
+
+                  <Button variant="warning" onClick={() => navigate("/checkout")}>
+                    PLACE ORDER
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+
+          {/* Coupon Section */}
+          <Row className="mt-4">
+            <Col lg={8}>
+              <Card className="shadow-sm">
                 <Card.Body>
                   <div className="d-flex align-items-center mb-3">
                     <Gift className="text-warning me-2" size={20} />
@@ -215,11 +246,7 @@ const CartPage = () => {
                         disabled={couponApplied}
                       />
                       {couponApplied ? (
-                        <Button
-                          variant="outline-danger"
-                          className="ms-2"
-                          onClick={removeCoupon}
-                        >
+                        <Button variant="outline-danger" className="ms-2" onClick={removeCoupon}>
                           Remove
                         </Button>
                       ) : (
@@ -238,77 +265,9 @@ const CartPage = () => {
                   {couponApplied && (
                     <Alert variant="success" className="d-flex align-items-center py-2">
                       <CheckCircle className="me-2" />
-                      10% discount applied with coupon {couponCode}
+                      10% discount applied with coupon <strong>{couponCode}</strong>
                     </Alert>
                   )}
-
-                  <div className="offer-card p-3 bg-light rounded">
-                    <div className="d-flex align-items-center mb-2">
-                      <Tag className="text-success me-2" />
-                      <strong>Available Offers</strong>
-                    </div>
-                    <ul className="small ps-3 mb-0">
-                      <li>10% off on orders above ₹1000</li>
-                      <li>Free delivery on orders above ₹500</li>
-                      <li>Extra 5% off with SBI credit cards</li>
-                    </ul>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Price Summary Column */}
-            <Col lg={4} className="mt-4 mt-lg-0">
-              <Card className="border-0 shadow-sm sticky-top" style={{ top: "20px" }}>
-                <Card.Body>
-                  <h5 className="mb-3">Price Details ({cartItems.length} Items)</h5>
-
-                  <div className="d-flex justify-content-between mb-2">
-                    <span>Total MRP</span>
-                    <span>₹{calculateTotal().toLocaleString()}</span>
-                  </div>
-
-                  {couponApplied && (
-                    <div className="d-flex justify-content-between mb-2 text-success">
-                      <span>Discount</span>
-                      <span>-₹{calculateDiscount().toLocaleString()}</span>
-                    </div>
-                  )}
-
-                  <div className="d-flex justify-content-between mb-2">
-                    <span>Delivery Charges</span>
-                    <span>
-                      {deliveryCharge === 0 ? (
-                        <span className="text-success">FREE</span>
-                      ) : (
-                        `₹${deliveryCharge}`
-                      )}
-                    </span>
-                  </div>
-
-                  <hr />
-
-                  <div className="d-flex justify-content-between mb-3 fw-bold">
-                    <span>Total Amount</span>
-                    <span>₹{(calculateFinalTotal() + deliveryCharge).toLocaleString()}</span>
-                  </div>
-
-                  <Button
-                    variant="warning"
-                    onClick={() => navigate("/checkout")}
-                  >
-                    PLACE ORDER
-                  </Button>
-
-                  <div className="d-flex align-items-center text-success small mb-2">
-                    <ShieldCheck className="me-2" />
-                    <span>Safe and Secure Payments</span>
-                  </div>
-
-                  <div className="d-flex align-items-center text-muted small">
-                    <Truck className="me-2" />
-                    <span>Easy returns & 10 days replacements</span>
-                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -316,12 +275,10 @@ const CartPage = () => {
         </>
       )}
 
-      {/* Remove Item Confirmation Modal */}
+      {/* Remove Confirmation Modal */}
       <Modal show={showRemoveModal} onHide={() => setShowRemoveModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {itemToRemove === "all" ? "Remove All Items?" : "Remove Item?"}
-          </Modal.Title>
+          <Modal.Title>{itemToRemove === "all" ? "Remove All Items?" : "Remove Item?"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {itemToRemove === "all"

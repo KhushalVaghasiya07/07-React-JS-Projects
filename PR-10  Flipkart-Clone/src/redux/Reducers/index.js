@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { productReducer } from './productReducer'; // ✅ Add this line
 
 // Helper function to load cart from localStorage
 const loadCart = () => {
@@ -22,24 +23,32 @@ const saveCart = (cartItems) => {
   }
 };
 
-// Products reducer
-const productsReducer = (state = [], action) => {
+// ✅ Products list reducer
+const productsReducer = (
+  state = { loading: false, products: [], error: null },
+  action
+) => {
   switch (action.type) {
+    case "FETCH_PRODUCTS_REQUEST":
+      return { ...state, loading: true, error: null };
+    case "FETCH_PRODUCTS_SUCCESS":
+      return { ...state, loading: false, products: action.payload };
+    case "FETCH_PRODUCTS_FAIL":
+      return { ...state, loading: false, error: action.payload };
     case "SET_PRODUCTS":
-      return action.payload;
+      return { ...state, products: action.payload };
     default:
       return state;
   }
 };
 
-// Cart reducer with complete functionality
+// ✅ Cart reducer with complete functionality
 const cartReducer = (state = loadCart(), action) => {
   let newState;
 
   switch (action.type) {
     case "ADD_TO_CART":
       const existingItem = state.find(item => item.id === action.payload.id);
-
       if (existingItem) {
         newState = state.map(item =>
           item.id === action.payload.id
@@ -71,12 +80,13 @@ const cartReducer = (state = loadCart(), action) => {
       return state;
   }
 
-  // Save to localStorage whenever cart changes
   saveCart(newState);
   return newState;
 };
 
+// ✅ Combine all reducers including productReducer
 export default combineReducers({
   products: productsReducer,
   cart: cartReducer,
+  productReducer, // ✅ This is necessary for single product view to work
 });

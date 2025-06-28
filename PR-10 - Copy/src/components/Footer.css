@@ -1,0 +1,80 @@
+.flipkart-footer {
+  background-color: #212121;
+  color: #fff;
+  font-size: 14px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.flipkart-footer a {
+  color: #ffffffcc;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+
+.flipkart-footer a:hover {
+  color: #f1c40f;
+  text-decoration: underline;
+}
+
+.flipkart-footer h6 {
+  font-size: 14px;
+  color: #878787;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.flipkart-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-address {
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.social-icons i {
+  font-size: 20px;
+  margin-right: 15px;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.social-icons i:hover {
+  color: #f1c40f;
+}
+
+.bottom-footer {
+  font-size: 13px;
+  color: #bbb;
+}
+
+.footer-divider {
+  height: 1px;
+  background-color: #555;
+  width: 100%;
+  margin: 0;
+}
+
+.payment-methods {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .flipkart-footer .col-sm-6 {
+    margin-bottom: 20px;
+  }
+
+  .social-icons i {
+    margin-right: 10px;
+  }
+}

@@ -56,6 +56,8 @@ const Home = () => {
       <CategoryCarousel
         title="Best of Electronics"
         category="electronics"
+
+
         showAd={true}
         itemsPerPage={6}
       />

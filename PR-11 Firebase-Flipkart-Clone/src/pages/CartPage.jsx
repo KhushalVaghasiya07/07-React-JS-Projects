@@ -249,13 +249,14 @@ const CartPage = () => {
                     <span>₹{total.toLocaleString()}</span>
                   </div>
 
-                  <Button
-                    variant="warning"
-                    onClick={() => navigate("/checkout")}
-                    className="w-100 py-2"
-                  >
-                    PLACE ORDER
-                  </Button>
+                    <Button
+                      variant="success"
+                      className="w-100 mt-3"
+                      onClick={() => navigate("/checkout")}
+                    >
+                      Proceed to Checkout
+                    </Button>
+
                 </Card.Body>
               </Card>
 

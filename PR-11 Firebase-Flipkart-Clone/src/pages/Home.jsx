@@ -48,7 +48,7 @@ const Home = () => {
                 transition: "transform 1s ease-in-out",
               }}
             />
-          </Carousel.Item>
+          </Carousel.Item>  
         ))}
       </Carousel>
 

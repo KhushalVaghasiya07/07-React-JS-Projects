@@ -1,28 +1,38 @@
-import { createStore, combineReducers, applyMiddleware, compose } from "redux";
-import { thunk } from "redux-thunk";
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware,
+  compose
+} from 'redux';
+import {thunk} from 'redux-thunk';
 
 import {
   productListReducer,
   productDetailsReducer,
-  productCategoryReducer,
-} from "./Reducers/productReducer";
+  productCategoryReducer
+} from './Reducers/productReducer';
+import { cartReducer } from './Reducers/cartReducer';
 
-import { cartReducer } from "./Reducers/cartReducer";
-
-// ✅ Combine all reducers
+// Combine all reducers
 const rootReducer = combineReducers({
   productList: productListReducer,
-  productDetail: productDetailsReducer,     // ✅ Renamed to match useSelector
+  productDetail: productDetailsReducer,
   productCategory: productCategoryReducer,
   cart: cartReducer,
 });
 
-// ✅ Setup for Redux DevTools + Thunk Middleware
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// Middlewares
+const middleware = [thunk];
 
+// DevTools setup
+const composeEnhancers =
+  (typeof window !== 'undefined' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
+// Create and export the store
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(...middleware))
 );
 
 export default store;

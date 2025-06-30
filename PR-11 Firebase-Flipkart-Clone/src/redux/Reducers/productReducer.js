@@ -1,5 +1,3 @@
-// redux/Reducers/productReducer.js
-
 import {
   FETCH_PRODUCTS_REQUEST,
   FETCH_PRODUCTS_SUCCESS,
@@ -14,24 +12,31 @@ import {
   DELETE_PRODUCT,
 } from "../Actions/productActions";
 
-
 // 🛒 Product List Reducer
-const productListState = {
+const initialProductListState = {
   products: [],
   loading: false,
   error: null,
+  lastFetched: null,
+  totalProducts: 0,
 };
 
-export const productListReducer = (state = productListState, action) => {
+export const productListReducer = (state = initialProductListState, action) => {
   switch (action.type) {
     case FETCH_PRODUCTS_REQUEST:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
     case FETCH_PRODUCTS_SUCCESS:
       return {
         ...state,
         loading: false,
-        products: action.payload,
+        products: action.payload.products || action.payload,
+        totalProducts: action.payload.totalCount || action.payload.length,
+        lastFetched: Date.now(),
         error: null,
       };
 
@@ -41,12 +46,14 @@ export const productListReducer = (state = productListState, action) => {
         loading: false,
         error: action.payload,
         products: [],
+        totalProducts: 0,
       };
 
     case ADD_PRODUCT:
       return {
         ...state,
-        products: [...state.products, action.payload],
+        products: [action.payload, ...state.products],
+        totalProducts: state.totalProducts + 1,
       };
 
     case UPDATE_PRODUCT:
@@ -63,6 +70,7 @@ export const productListReducer = (state = productListState, action) => {
         products: state.products.filter(
           (product) => product.id !== action.payload
         ),
+        totalProducts: Math.max(0, state.totalProducts - 1),
       };
 
     default:
@@ -70,24 +78,30 @@ export const productListReducer = (state = productListState, action) => {
   }
 };
 
-
 // 📦 Single Product Detail Reducer
-const productDetailState = {
+const initialProductDetailState = {
   product: null,
   loading: false,
   error: null,
+  lastFetched: null,
 };
 
-export const productDetailsReducer = (state = productDetailState, action) => {
+export const productDetailsReducer = (state = initialProductDetailState, action) => {
   switch (action.type) {
     case FETCH_PRODUCT_BY_ID_REQUEST:
-      return { ...state, loading: true, error: null };
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
     case FETCH_PRODUCT_BY_ID_SUCCESS:
       return {
         ...state,
         loading: false,
         product: action.payload,
+        lastFetched: Date.now(),
+        error: null,
       };
 
     case FETCH_PRODUCT_BY_ID_FAIL:
@@ -99,32 +113,62 @@ export const productDetailsReducer = (state = productDetailState, action) => {
       };
 
     case CLEAR_PRODUCT_DETAIL:
-      return {
-        ...state,
-        product: null,
-        error: null,
-        loading: false,
-      };
+      return initialProductDetailState;
 
     default:
       return state;
   }
 };
 
-
 // 🎯 Category-based Product Reducer
-const categoryProductState = {
+const initialCategoryState = {
   productsByCategory: {},
+  loadingCategories: {},
+  errors: {},
 };
 
-export const productCategoryReducer = (state = categoryProductState, action) => {
+export const productCategoryReducer = (state = initialCategoryState, action) => {
   switch (action.type) {
+    case FETCH_PRODUCTS_REQUEST:
+      return {
+        ...state,
+        loadingCategories: {
+          ...state.loadingCategories,
+          [action.meta?.category]: true,
+        },
+        errors: {
+          ...state.errors,
+          [action.meta?.category]: null,
+        },
+      };
+
     case FETCH_PRODUCTS_BY_CATEGORY:
       return {
         ...state,
         productsByCategory: {
           ...state.productsByCategory,
           [action.payload.category]: action.payload.products,
+        },
+        loadingCategories: {
+          ...state.loadingCategories,
+          [action.payload.category]: false,
+        },
+        errors: {
+          ...state.errors,
+          [action.payload.category]: null,
+        },
+      };
+
+    case FETCH_PRODUCTS_FAIL:
+      return {
+        ...state,
+        loadingCategories: {
+          ...state.loadingCategories,
+          [action.meta?.category]: false,
+        },
+        errors: {
+          ...state.errors,
+          [action.meta?.category]: action.payload,
         },
       };
 

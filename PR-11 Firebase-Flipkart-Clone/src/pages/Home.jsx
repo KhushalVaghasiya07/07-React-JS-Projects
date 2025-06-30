@@ -55,14 +55,13 @@ const Home = () => {
       {/* Category Specific Carousels */}
       <CategoryCarousel
         title="Best of Electronics"
-        category="electronics"
+        category="electronics" // ✅ lowercase
         showAd={true}
-        itemsPerPage={6}
       />
 
       <CategoryCarousel
         title="Beauty, Food, Toys & More"
-        category="Grocery"
+        category="grocery"
         itemsPerPage={7}
       />
 
@@ -71,6 +70,7 @@ const Home = () => {
         category="fashion"
         itemsPerPage={7}
       />
+
     </div>
   );
 };

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProductById } from '../redux/Actions/productActions';
+import { fetchProductById, clearProductDetail } from '../redux/Actions/productActions';
 import { addToCart } from '../redux/Actions/cartActions';
 import {
-  Container, Row, Col, Button, Badge, Alert, Spinner
+  Container, Row, Col, Button, Badge, Alert, Spinner,
+  Image, ListGroup, Toast
 } from 'react-bootstrap';
 import {
   StarFill, StarHalf, Heart, HeartFill,
-  Truck, ShieldCheck, ArrowLeft
+  Truck, ShieldCheck, ArrowLeft, CheckCircle
 } from 'react-bootstrap-icons';
+import { getAuth } from 'firebase/auth'; // ✅ for Firebase user ID
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -18,27 +20,75 @@ const ProductDetail = () => {
 
   const { product, loading, error } = useSelector(state => state.productDetail);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [mainImage, setMainImage] = useState('');
+  const [thumbnailImages, setThumbnailImages] = useState([]);
+  const [showCartToast, setShowCartToast] = useState(false);
 
   useEffect(() => {
     if (id) dispatch(fetchProductById(id));
+    return () => dispatch(clearProductDetail());
   }, [dispatch, id]);
+
+  useEffect(() => {
+    if (product) {
+      setMainImage(product.image || '');
+      const images = product.images?.length > 0
+        ? product.images
+        : Array(4).fill(product.image || '');
+      setThumbnailImages(images);
+    }
+  }, [product]);
 
   const renderRatingStars = (rating = 0) => {
     const stars = [];
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5;
-    for (let i = 0; i < full; i++) stars.push(<StarFill key={`f-${i}`} className="text-warning" />);
-    if (half) stars.push(<StarHalf key="half" className="text-warning" />);
-    for (let i = stars.length; i < 5; i++) stars.push(<StarFill key={`e-${i}`} className="text-secondary" />);
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<StarFill key={`full-${i}`} className="text-warning" />);
+    }
+
+    if (hasHalfStar) {
+      stars.push(<StarHalf key="half" className="text-warning" />);
+    }
+
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<StarFill key={`empty-${i}`} className="text-secondary" />);
+    }
+
     return stars;
+  };
+
+  // ✅ Firebase Auth + clean cart item structure
+  const handleAddToCart = () => {
+    if (!product) return;
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const cartId = user ? user.uid : "guest_cart";
+
+    // 🧼 Add only required fields to Firebase
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1
+    };
+
+    dispatch(addToCart(cartItem, cartId));
+    setShowCartToast(true);
+  };
+
+  const handleImageClick = (img) => {
+    setMainImage(img);
   };
 
   if (loading) {
     return (
       <Container className="my-5 text-center">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        <Spinner animation="border" role="status" />
+        <p className="mt-2">Loading product details...</p>
       </Container>
     );
   }
@@ -47,11 +97,14 @@ const ProductDetail = () => {
     return (
       <Container className="my-5">
         <Alert variant="danger" className="text-center">
-          Error loading product: {error}
+          <Alert.Heading>Error loading product</Alert.Heading>
+          <p>{error}</p>
         </Alert>
-        <Button variant="light" onClick={() => navigate(-1)} className="mt-3">
-          <ArrowLeft /> Back to Products
-        </Button>
+        <div className="d-flex justify-content-center">
+          <Button variant="outline-primary" onClick={() => navigate(-1)}>
+            <ArrowLeft className="me-2" /> Back to Products
+          </Button>
+        </div>
       </Container>
     );
   }
@@ -60,40 +113,62 @@ const ProductDetail = () => {
     return (
       <Container className="my-5">
         <Alert variant="warning" className="text-center">
-          Product not found
+          <Alert.Heading>Product not found</Alert.Heading>
+          <p>The requested product could not be loaded.</p>
         </Alert>
-        <Button variant="light" onClick={() => navigate(-1)} className="mt-3">
-          <ArrowLeft /> Back to Products
-        </Button>
+        <div className="d-flex justify-content-center">
+          <Button variant="outline-primary" onClick={() => navigate(-1)}>
+            <ArrowLeft className="me-2" /> Back to Products
+          </Button>
+        </div>
       </Container>
     );
   }
 
   return (
     <Container className="my-5 product-detail">
-      <Button variant="light" onClick={() => navigate(-1)} className="mb-4">
-        <ArrowLeft /> Back to Products
+      <Button variant="outline-secondary" onClick={() => navigate(-1)} className="mb-4">
+        <ArrowLeft className="me-1" /> Back to Products
       </Button>
 
+      {/* ✅ Toast for success message */}
+      <Toast
+        onClose={() => setShowCartToast(false)}
+        show={showCartToast}
+        delay={3000}
+        autohide
+        style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Added to Cart</strong>
+        </Toast.Header>
+        <Toast.Body>{product.name} has been added to your cart!</Toast.Body>
+      </Toast>
+
       <Row className="g-4">
-        <Col md={6}>
-          <div className="border rounded-3 p-3 mb-3 text-center">
-            <img
-              src={product.image}
-              alt={product.name || 'Product Image'}
-              className="img-fluid main-image"
-              style={{ maxHeight: '400px', objectFit: 'contain' }}
+        {/* Images */}
+        <Col md={6} lg={5}>
+          <div className="border rounded-3 p-3 mb-3 text-center bg-light">
+            <Image
+              src={mainImage || product.image}
+              alt={product.name}
+              fluid
+              style={{ maxHeight: '400px', width: '100%', objectFit: 'contain' }}
             />
           </div>
           <Row className="g-2">
-            {[1, 2, 3, 4].map((i) => (
-              <Col xs={3} key={i}>
-                <div className="border rounded-3 p-2 text-center thumbnail">
-                  <img
-                    src={product.image}
-                    alt={`${product.name} thumbnail ${i}`}
-                    className="img-fluid"
-                    style={{ height: '80px', objectFit: 'contain' }}
+            {thumbnailImages.slice(0, 4).map((img, index) => (
+              <Col xs={3} key={index}>
+                <div
+                  className={`border rounded-3 p-2 text-center thumbnail ${mainImage === img ? 'border-primary' : ''}`}
+                  onClick={() => handleImageClick(img)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Image
+                    src={img}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    fluid
+                    style={{ height: '80px', width: '100%', objectFit: 'contain' }}
                   />
                 </div>
               </Col>
@@ -101,30 +176,38 @@ const ProductDetail = () => {
           </Row>
         </Col>
 
-        <Col md={6}>
-          <div className="d-flex justify-content-between align-items-start">
+        {/* Info */}
+        <Col md={6} lg={7}>
+          <div className="d-flex justify-content-between align-items-start mb-3">
             <div>
               <h1 className="mb-2">{product.name}</h1>
               <div className="d-flex align-items-center mb-3">
-                <div className="me-2">{renderRatingStars(product.rating || 4.5)}</div>
-                <span className="text-muted">({product.reviews || 124} reviews)</span>
+                <div className="me-2">{renderRatingStars(product.rating || 0)}</div>
+                <span className="text-muted">
+                  ({product.reviews || 0} review{product.reviews !== 1 ? 's' : ''})
+                </span>
               </div>
             </div>
-            <Button variant="outline-danger" onClick={() => setIsWishlisted(!isWishlisted)}>
+            <Button
+              variant={isWishlisted ? "danger" : "outline-danger"}
+              onClick={() => setIsWishlisted(!isWishlisted)}
+            >
               {isWishlisted ? <HeartFill /> : <Heart />}
             </Button>
           </div>
 
-          <h2 className="text-primary mb-0">₹{product.price?.toLocaleString()}</h2>
-          {product.originalPrice && (
-            <del className="text-muted ms-2">₹{product.originalPrice.toLocaleString()}</del>
-          )}
-          {product.discount && (
-            <Badge bg="success" className="ms-2">{product.discount}% OFF</Badge>
-          )}
+          <div className="mb-3">
+            <h2 className="text-primary mb-0">₹{product.price?.toLocaleString('en-IN')}</h2>
+            {product.originalPrice && (
+              <del className="text-muted ms-2 fs-5">₹{product.originalPrice.toLocaleString('en-IN')}</del>
+            )}
+            {product.discount && (
+              <Badge bg="success" className="ms-2 fs-6">{product.discount}% OFF</Badge>
+            )}
+          </div>
 
           {product.desc && (
-            <div className="mb-3 mt-4">
+            <div className="mb-4">
               <h5>Description</h5>
               <p className="text-muted">{product.desc}</p>
             </div>
@@ -133,17 +216,24 @@ const ProductDetail = () => {
           {Array.isArray(product.features) && product.features.length > 0 && (
             <div className="mb-4">
               <h5>Features</h5>
-              <ul>{product.features.map((f, i) => <li key={i}>{f}</li>)}</ul>
+              <ListGroup variant="flush">
+                {product.features.map((feature, i) => (
+                  <ListGroup.Item key={i} className="px-0">
+                    <CheckCircle className="text-success me-2" />
+                    {feature}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
             </div>
           )}
 
-          <div className="d-flex gap-3 mb-4">
-            <div className="d-flex align-items-center me-3">
-              <Truck className="text-success me-2" size={20} />
+          <div className="d-flex flex-wrap gap-3 mb-4">
+            <div className="d-flex align-items-center text-success">
+              <Truck className="me-2" size={20} />
               <span>Free Delivery</span>
             </div>
-            <div className="d-flex align-items-center">
-              <ShieldCheck className="text-primary me-2" size={20} />
+            <div className="d-flex align-items-center text-primary">
+              <ShieldCheck className="me-2" size={20} />
               <span>1 Year Warranty</span>
             </div>
           </div>
@@ -153,18 +243,18 @@ const ProductDetail = () => {
               variant="primary"
               size="lg"
               className="flex-grow-1"
-              onClick={() => dispatch(addToCart(product))}
+              onClick={handleAddToCart}
             >
               Add to Cart
             </Button>
-            <Button variant="outline-primary" size="lg" className="flex-grow-1">
-              Buy Now
-            </Button>
           </div>
 
-          <Alert variant="info">
-            <strong>Special Offer:</strong> Get 5% cashback on orders above ₹5000
-          </Alert>
+          {product.specialOffer && (
+            <Alert variant="info" className="mb-4">
+              <Alert.Heading>Special Offer</Alert.Heading>
+              <p className="mb-0">{product.specialOffer}</p>
+            </Alert>
+          )}
         </Col>
       </Row>
     </Container>

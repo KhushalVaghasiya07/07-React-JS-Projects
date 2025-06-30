@@ -23,14 +23,20 @@ const CategoryCarousel = ({ title, category, showAd }) => {
   );
 
   const categoryProducts = productsByCategory[category] || [];
-  const visibleProducts = categoryProducts.slice(visibleIndex, visibleIndex + itemsPerPage);
+  const visibleProducts = categoryProducts.slice(
+    visibleIndex,
+    visibleIndex + itemsPerPage
+  );
 
   useEffect(() => {
     dispatch(fetchProductsByCategory(category));
   }, [dispatch, category]);
 
   const scrollRight = () => {
-    if (visibleIndex + itemsPerPage < categoryProducts.length) {
+    if (
+      visibleIndex + itemsPerPage <
+      Math.min(categoryProducts.length, maxItems)
+    ) {
       setVisibleIndex((prev) => prev + 1);
     }
   };
@@ -42,7 +48,7 @@ const CategoryCarousel = ({ title, category, showAd }) => {
   };
 
   const handleEdit = (product) => {
-    navigate(`/add-product/${product.id}`, {
+    navigate(`/add-product/${product.id || product.docId}`, {
       state: { product },
     });
   };
@@ -50,15 +56,14 @@ const CategoryCarousel = ({ title, category, showAd }) => {
   const handleDelete = (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       dispatch(deleteProduct(productId)).then(() => {
-        dispatch(fetchProductsByCategory(category)); // 👈 re-fetch updated list
+        dispatch(fetchProductsByCategory(category));
       });
     }
   };
 
-
   return (
     <div className="electronics-wrapper">
-      <div className={`best-electronics-section ${showAd ? 'has-ad' : ''}`}>
+      <div className={`best-electronics-section ${showAd ? "has-ad" : ""}`}>
         <div className="electronic-cards">
           <h2>{title}</h2>
 
@@ -66,7 +71,12 @@ const CategoryCarousel = ({ title, category, showAd }) => {
             {visibleIndex > 0 && (
               <button className="scroll-btn left" onClick={scrollLeft}>
                 <svg width="20" height="20" fill="#878787" viewBox="0 0 24 24">
-                  <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <path
+                    d="M15 18l-6-6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
                 </svg>
               </button>
             )}
@@ -74,36 +84,53 @@ const CategoryCarousel = ({ title, category, showAd }) => {
             <div className="product-carousel-wrapper">
               <Row className="product-carousel">
                 {visibleProducts.map((item) => (
-                  <Col key={item.id} xs={6} sm={4} md={3} lg={2}>
+                  <Col key={item.id || item.docId} xs={6} sm={4} md={3} lg={2}>
                     <div className="product-card">
-                      <Link to={`/product/${item.id}`} className="product-link">
+                      <Link
+                        to={`/product/${item.id || item.docId}`}
+                        className="product-link"
+                      >
                         <div className="product-image-container">
-                          <img src={item.image} alt={item.name} className="product-image" />
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="product-image"
+                          />
                         </div>
                         <div className="product-details">
                           <p className="product-name">{item.name}</p>
                           <div className="price-section">
-                            <span className="current-price">₹{item.price.toLocaleString()}</span>
+                            <span className="current-price">
+                              ₹{item.price?.toLocaleString()}
+                            </span>
                             {item.originalPrice && (
-                              <span className="original-price">₹{item.originalPrice.toLocaleString()}</span>
+                              <span className="original-price">
+                                ₹{item.originalPrice.toLocaleString()}
+                              </span>
                             )}
                             {item.discount && (
-                              <span className="discount">{item.discount}% off</span>
+                              <span className="discount">
+                                {item.discount}% off
+                              </span>
                             )}
                           </div>
-
-                          {/* Action buttons moved inside product-details below price */}
                           <div className="action-links">
-                            <button className="action-btn" onClick={(e) => {
-                              e.preventDefault();
-                              handleEdit(item);
-                            }}>
+                            <button
+                              className="action-btn"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleEdit(item);
+                              }}
+                            >
                               <FiEdit size={16} />
                             </button>
-                            <button className="action-btn" onClick={(e) => {
-                              e.preventDefault();
-                              handleDelete(item.id);
-                            }}>
+                            <button
+                              className="action-btn"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDelete(item.id);
+                              }}
+                            >
                               <FiTrash2 size={16} />
                             </button>
                           </div>
@@ -115,13 +142,19 @@ const CategoryCarousel = ({ title, category, showAd }) => {
               </Row>
             </div>
 
-            {visibleIndex + itemsPerPage < Math.min(categoryProducts.length, maxItems) && (
-              <button className="scroll-btn right" onClick={scrollRight}>
-                <svg width="20" height="20" fill="#878787" viewBox="0 0 24 24">
-                  <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" fill="none" />
-                </svg>
-              </button>
-            )}
+            {visibleIndex + itemsPerPage <
+              Math.min(categoryProducts.length, maxItems) && (
+                <button className="scroll-btn right" onClick={scrollRight}>
+                  <svg width="20" height="20" fill="#878787" viewBox="0 0 24 24">
+                    <path
+                      d="M9 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </svg>
+                </button>
+              )}
           </div>
         </div>
 

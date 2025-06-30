@@ -1,71 +1,56 @@
-// redux/Reducers/cartReducer.js
+import {
+  LOAD_CART,
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  UPDATE_QUANTITY,
+  CLEAR_CART,
+  CART_ERROR,
+  LOADING_CART,
+} from "../Actions/cartActions";
 
-// Helper: Load cart from localStorage
-const loadCartFromLocalStorage = () => {
-  try {
-    const data = localStorage.getItem("cart");
-    return data ? JSON.parse(data) : [];
-  } catch (error) {
-    console.error("Error loading cart from localStorage:", error);
-    return [];
-  }
-};
-
-// Helper: Save cart to localStorage
-const saveCartToLocalStorage = (cartItems) => {
-  try {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  } catch (error) {
-    console.error("Error saving cart to localStorage:", error);
-  }
-};
-
+// Initial state of cart
 const initialState = {
-  cartItems: loadCartFromLocalStorage(),
+  cartItems: [],
+  loading: false,
+  error: null,
 };
 
 export const cartReducer = (state = initialState, action) => {
-  let updatedCart;
-
   switch (action.type) {
-    case "ADD_TO_CART":
-      const exists = state.cartItems.find(item => item.id === action.payload.id);
-      if (exists) {
-        updatedCart = state.cartItems.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: item.quantity + (action.payload.quantity || 1) }
-            : item
-        );
-      } else {
-        updatedCart = [...state.cartItems, { ...action.payload, quantity: action.payload.quantity || 1 }];
-      }
-      break;
+    case LOADING_CART:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
-    case "REMOVE_FROM_CART":
-      updatedCart = state.cartItems.filter(item => item.id !== action.payload);
-      break;
+    case LOAD_CART:
+      return {
+        ...state,
+        cartItems: action.payload,
+        loading: false,
+        error: null,
+      };
 
-    case "UPDATE_QUANTITY":
-      updatedCart = state.cartItems.map(item =>
-        item.id === action.payload.id
-          ? { ...item, quantity: Math.max(1, action.payload.quantity) }
-          : item
-      );
-      break;
+    case ADD_TO_CART:
+    case REMOVE_FROM_CART:
+    case UPDATE_QUANTITY:
+    case CLEAR_CART:
+      return {
+        ...state,
+        cartItems: action.payload,
+        loading: false,
+        error: null,
+      };
 
-    case "CLEAR_CART":
-      updatedCart = [];
-      break;
+    case CART_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;
   }
-
-  // Save updated cart to localStorage
-  saveCartToLocalStorage(updatedCart);
-
-  return {
-    ...state,
-    cartItems: updatedCart,
-  };
 };

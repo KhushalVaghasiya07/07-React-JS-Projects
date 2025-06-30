@@ -47,14 +47,27 @@ const AddProduct = () => {
     e.preventDefault();
 
     try {
+      const cleanedData = {
+        ...formData,
+        category: formData.category.toLowerCase(), // ✅ Normalize category to lowercase
+      };
+
       if (isEditMode) {
         const productRef = doc(database, "products", id);
-        await updateDoc(productRef, formData);
+        await updateDoc(productRef, cleanedData);
         alert("Product updated successfully!");
       } else {
-        await addDoc(collection(database, "products"), formData);
+        // 🔥 Add product
+        const docRef = await addDoc(collection(database, "products"), cleanedData);
+
+        // 🔑 Update with Firestore doc ID
+        await updateDoc(doc(database, "products", docRef.id), {
+          id: docRef.id,
+        });
+
         alert("Product added to Firebase!");
       }
+
       navigate("/");
     } catch (error) {
       console.error("Firebase Error:", error);

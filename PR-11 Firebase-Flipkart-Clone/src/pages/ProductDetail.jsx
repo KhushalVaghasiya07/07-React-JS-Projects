@@ -11,7 +11,7 @@ import {
   StarFill, StarHalf, Heart, HeartFill,
   Truck, ShieldCheck, ArrowLeft, CheckCircle
 } from 'react-bootstrap-icons';
-import { getAuth } from 'firebase/auth'; // ✅ for Firebase user ID
+import { getAuth } from 'firebase/auth';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -60,14 +60,12 @@ const ProductDetail = () => {
     return stars;
   };
 
-  // ✅ Firebase Auth + clean cart item structure
   const handleAddToCart = () => {
     if (!product) return;
     const auth = getAuth();
     const user = auth.currentUser;
     const cartId = user ? user.uid : "guest_cart";
 
-    // 🧼 Add only required fields to Firebase
     const cartItem = {
       id: product.id,
       name: product.name,
@@ -131,7 +129,6 @@ const ProductDetail = () => {
         <ArrowLeft className="me-1" /> Back to Products
       </Button>
 
-      {/* ✅ Toast for success message */}
       <Toast
         onClose={() => setShowCartToast(false)}
         show={showCartToast}

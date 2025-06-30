@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import {
-  productListReducer,        // All products list
-  productDetailsReducer,     // Single product detail
-  productCategoryReducer     // Filtered by category
+  productListReducer,      
+  productDetailsReducer,
+  productCategoryReducer
 } from './productReducer';
 
-import { cartReducer } from './cartReducer'; // ✅ Firebase-based cart reducer
+import { cartReducer } from './cartReducer';
 
 const rootReducer = combineReducers({
   productList: productListReducer,

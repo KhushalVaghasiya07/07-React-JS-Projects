@@ -12,35 +12,21 @@ import {
   updateQuantity,
   clearCart
 } from "../redux/Actions/cartActions";
-
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import EmptyCart from "../assets/EmptyCart.png"
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartId = "guest_cart";
   const { cartItems = [], loading, error } = useSelector((state) => state.cart || {});
   const [showModal, setShowModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [coupon, setCoupon] = useState({ code: "", applied: false });
   const [toast, setToast] = useState({ show: false, message: "" });
-  const [cartId, setCartId] = useState(null);
 
-  // Wait for Firebase to determine auth status
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCartId(user ? user.uid : "guest_cart");
-    });
-
-    return () => unsubscribe(); // cleanup on unmount
-  }, []);
-
-  // Load cart when cartId is ready
-  useEffect(() => {
-    if (cartId) {
-      dispatch(loadCart(cartId));
-    }
-  }, [dispatch, cartId]);
+    dispatch(loadCart(cartId));
+  }, [dispatch]);
 
   const showMessage = (message) => {
     setToast({ show: true, message });
@@ -76,7 +62,7 @@ const CartPage = () => {
   const delivery = subtotal > 500 ? 0 : 40;
   const total = subtotal - discount + delivery;
 
-  if (!cartId || loading) {
+  if (loading) {
     return (
       <Container className="text-center my-5">
         <Spinner animation="border" role="status">
@@ -110,7 +96,6 @@ const CartPage = () => {
 
   return (
     <Container className="my-4">
-      {/* Toast Message */}
       <Toast
         show={toast.show}
         onClose={() => setToast({ ...toast, show: false })}
@@ -121,23 +106,41 @@ const CartPage = () => {
         <Toast.Body>{toast.message}</Toast.Body>
       </Toast>
 
-      {/* Empty Cart */}
       {cartItems.length === 0 ? (
-        <div className="text-center py-5">
-          <Image
-            src="/empty-cart.png"
-            fluid
-            style={{ maxWidth: "200px" }}
-            alt="Empty cart"
-          />
-          <h4 className="my-3">Your cart is empty!</h4>
-          <Button variant="primary" onClick={() => navigate("/")} className="mt-2">
-            Continue Shopping
-          </Button>
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ minHeight: "60vh", background: "#fff" }}
+        >
+          <div className="text-center p-4">
+            <img
+              src={EmptyCart}
+              alt="Empty Cart"
+              style={{
+                width: "200px",
+                height: "auto",
+                marginBottom: "20px",
+              }}
+            />
+            <h4 className="fw-semibold mb-2">Your cart is empty!</h4>
+            <p className="text-muted mb-4">Add items to it now.</p>
+            <Button
+              variant="primary"
+              size="lg"
+              style={{
+                borderRadius: "4px",
+                padding: "8px 32px",
+                fontWeight: "500",
+              }}
+              onClick={() => navigate("/")}
+            >
+              Shop now
+            </Button>
+          </div>
         </div>
+
+
       ) : (
         <>
-          {/* Cart Items List */}
           <Row className="mb-3 align-items-center">
             <Col>
               <h2 className="fw-bold">My Cart ({cartItems.length})</h2>
@@ -157,7 +160,6 @@ const CartPage = () => {
           </Row>
 
           <Row>
-            {/* Cart Left Side */}
             <Col md={8}>
               <Card className="border-0 shadow-sm mb-3">
                 <Card.Body className="p-0">
@@ -220,7 +222,6 @@ const CartPage = () => {
               </Card>
             </Col>
 
-            {/* Cart Right Side */}
             <Col md={4}>
               <Card className="border-0 shadow-sm sticky-top" style={{ top: "20px" }}>
                 <Card.Body>
@@ -249,14 +250,13 @@ const CartPage = () => {
                     <span>₹{total.toLocaleString()}</span>
                   </div>
 
-                    <Button
-                      variant="success"
-                      className="w-100 mt-3"
-                      onClick={() => navigate("/checkout")}
-                    >
-                      Proceed to Checkout
-                    </Button>
-
+                  <Button
+                    variant="success"
+                    className="w-100 mt-3"
+                    onClick={() => navigate("/checkout")}
+                  >
+                    Proceed to Checkout
+                  </Button>
                 </Card.Body>
               </Card>
 
@@ -309,7 +309,6 @@ const CartPage = () => {
         </>
       )}
 
-      {/* Modal for Delete Confirmation */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>

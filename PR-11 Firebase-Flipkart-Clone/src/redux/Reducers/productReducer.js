@@ -12,7 +12,6 @@ import {
   DELETE_PRODUCT,
 } from "../Actions/productActions";
 
-// 🛒 Product List Reducer
 const initialProductListState = {
   products: [],
   loading: false,
@@ -78,7 +77,6 @@ export const productListReducer = (state = initialProductListState, action) => {
   }
 };
 
-// 📦 Single Product Detail Reducer
 const initialProductDetailState = {
   product: null,
   loading: false,
@@ -120,7 +118,6 @@ export const productDetailsReducer = (state = initialProductDetailState, action)
   }
 };
 
-// 🎯 Category-based Product Reducer
 const initialCategoryState = {
   productsByCategory: {},
   loadingCategories: {},

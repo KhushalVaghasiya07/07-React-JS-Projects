@@ -8,7 +8,6 @@ import {
   LOADING_CART,
 } from "../Actions/cartActions";
 
-// Initial state of cart
 const initialState = {
   cartItems: [],
   loading: false,

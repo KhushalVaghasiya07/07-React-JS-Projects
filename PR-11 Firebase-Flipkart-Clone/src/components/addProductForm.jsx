@@ -3,7 +3,6 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./addProductForm.css";
 
-// Firebase Firestore
 import { database } from "../firebase";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 
@@ -49,7 +48,7 @@ const AddProduct = () => {
     try {
       const cleanedData = {
         ...formData,
-        category: formData.category.toLowerCase(), // ✅ Normalize category to lowercase
+        category: formData.category.toLowerCase(),
       };
 
       if (isEditMode) {
@@ -57,10 +56,8 @@ const AddProduct = () => {
         await updateDoc(productRef, cleanedData);
         alert("Product updated successfully!");
       } else {
-        // 🔥 Add product
         const docRef = await addDoc(collection(database, "products"), cleanedData);
 
-        // 🔑 Update with Firestore doc ID
         await updateDoc(doc(database, "products", docRef.id), {
           id: docRef.id,
         });

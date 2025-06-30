@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from "../../firebase";
 
-// Action Types
 export const LOAD_CART = "LOAD_CART";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
@@ -10,13 +9,11 @@ export const CLEAR_CART = "CLEAR_CART";
 export const CART_ERROR = "CART_ERROR";
 export const LOADING_CART = "LOADING_CART";
 
-// Helper to get Firestore doc ref
 const getCartRef = (userId) => {
   if (!userId) throw new Error("User ID is required to access cart");
   return doc(database, "userCarts", userId);
 };
 
-// Load cart items from Firestore
 export const loadCart = (userId) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -40,7 +37,6 @@ export const loadCart = (userId) => async (dispatch) => {
   }
 };
 
-// Add to cart (Firestore)
 export const addToCart = (product, userId) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -64,7 +60,6 @@ export const addToCart = (product, userId) => async (dispatch) => {
   }
 };
 
-// Remove item from cart
 export const removeFromCart = (productId, userId) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -82,7 +77,6 @@ export const removeFromCart = (productId, userId) => async (dispatch) => {
   }
 };
 
-// Update quantity (+ or -)
 export const updateQuantity = (productId, actionType, userId) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -108,7 +102,6 @@ export const updateQuantity = (productId, actionType, userId) => async (dispatch
   }
 };
 
-// Clear entire cart
 export const clearCart = (userId) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });

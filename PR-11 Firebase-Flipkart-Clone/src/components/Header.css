@@ -42,3 +42,9 @@
     align-items: flex-start;
   }
 }
+
+.header-top .nav-link.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

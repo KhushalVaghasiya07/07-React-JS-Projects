@@ -18,7 +18,6 @@ import CategorySlider from "../components/CategorySlider";
 const Home = () => {
   const dispatch = useDispatch();
 
-  // ✅ Load all products when Home page mounts
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
@@ -30,10 +29,8 @@ const Home = () => {
 
   return (
     <div className="bg-light pb-4">
-      {/* Categories Icons Horizontal Slider */}
       <CategorySlider />
 
-      {/* Main Banner Slider */}
       <Carousel className="mb-4 custom-carousel" interval={3000} slide={true}>
         {sliderImages.map((img, index) => (
           <Carousel.Item key={index}>
@@ -48,14 +45,13 @@ const Home = () => {
                 transition: "transform 1s ease-in-out",
               }}
             />
-          </Carousel.Item>  
+          </Carousel.Item>
         ))}
       </Carousel>
 
-      {/* Category Specific Carousels */}
       <CategoryCarousel
         title="Best of Electronics"
-        category="electronics" // ✅ lowercase
+        category="electronics" 
         showAd={true}
       />
 

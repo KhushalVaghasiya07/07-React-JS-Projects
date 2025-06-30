@@ -1,9 +1,7 @@
-// src/components/TopCategoryBar.jsx
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import './TopCategoryBar.css';
 
-// Import your title1 to title9 images
 import title1 from '../assets/title1.webp';
 import title2 from '../assets/title2.webp';
 import title3 from '../assets/title3.webp';

@@ -170,7 +170,7 @@ export const fetchProductById = (id) => async (dispatch) => {
     dispatch({
       type: FETCH_PRODUCT_BY_ID_SUCCESS,
       payload: {
-        id: productDoc.id, // using Firestore doc ID
+        id: productDoc.id,
         ...productDoc.data(),
       },
     });

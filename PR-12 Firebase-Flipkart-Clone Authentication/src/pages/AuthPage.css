@@ -1,0 +1,279 @@
+/* src/pages/AuthPage.css */
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  /* Adjust based on header/footer height */
+  background-color: #f0f2f5;
+  /* Light grey background */
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  /* Flipkart uses a clean sans-serif font */
+}
+
+.auth-container {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 900px;
+  /* Adjust as needed */
+  width: 100%;
+}
+
+.auth-left {
+  flex: 1;
+  background-color: #2874f0;
+  /* Flipkart blue */
+  color: #fff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  min-width: 300px;
+  /* Minimum width for the left panel */
+}
+
+.auth-left h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.auth-left p {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 40px;
+  /* Space before image */
+  opacity: 0.8;
+}
+
+.auth-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: auto;
+  /* Pushes image to the bottom */
+}
+
+.auth-right {
+  flex: 1.5;
+  /* Give more space to the form */
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 350px;
+  /* Max width for the form elements */
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  /* Spacing between input fields */
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px 0;
+  /* Padding for input */
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  /* Light border at bottom */
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  /* Remove outline on focus */
+  transition: border-color 0.3s ease;
+}
+
+.auth-input::placeholder {
+  color: #999;
+}
+
+.auth-input:focus {
+  border-bottom-color: #2874f0;
+  /* Flipkart blue on focus */
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #fb641b;
+  /* Flipkart orange */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  /* Space above button */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* Subtle shadow */
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background-color: #e05510;
+  /* Darker orange on hover */
+}
+
+.auth-submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.auth-terms {
+  font-size: 12px;
+  color: #878787;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.terms-link {
+  color: #2874f0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+.auth-google-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-google-btn:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+
+.auth-google-btn:disabled {
+  background-color: #f9f9f9;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Optional: Add a Google icon if you have one or use a common font icon library */
+.auth-google-btn::before {
+  /* content: 'G'; */
+  /* Placeholder, replace with actual icon */
+  /* font-family: 'Font Awesome 5 Brands'; */
+  /* margin-right: 8px; */
+}
+
+
+.auth-toggle-link {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.toggle-btn {
+  color: #2874f0;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
+
+.auth-error-message {
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: -15px;
+  /* Adjust to fit below input */
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+    max-width: 450px;
+  }
+
+  .auth-left {
+    padding: 30px;
+    min-height: 200px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .auth-left h2 {
+    font-size: 24px;
+  }
+
+  .auth-left p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .auth-image {
+    display: none;
+    /* Hide image on smaller screens to save space */
+  }
+
+  .auth-right {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 10px;
+  }
+
+  .auth-container {
+    border-radius: 4px;
+  }
+
+  .auth-left,
+  .auth-right {
+    padding: 20px;
+  }
+
+  .auth-left h2 {
+    font-size: 22px;
+  }
+
+  .auth-left p {
+    font-size: 14px;
+  }
+
+  .auth-submit-btn,
+  .auth-google-btn {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

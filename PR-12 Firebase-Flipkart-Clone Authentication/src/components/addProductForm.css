@@ -1,0 +1,94 @@
+.add-product-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.add-product-form h2 {
+  color: #212121;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-product-form .form-control,
+.add-product-form .form-select {
+  height: 42px;
+  border-radius: 2px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  padding: 10px 12px;
+  box-shadow: none;
+}
+
+.add-product-form .form-control:focus,
+.add-product-form .form-select:focus {
+  border-color: #2874f0;
+  box-shadow: 0 0 0 1px #2874f0;
+}
+
+.add-product-form .form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+  margin-bottom: 8px;
+}
+
+.add-product-form textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.add-product-form .shadow {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.add-product-form .btn-primary {
+  background-color: #fb641b;
+  border: none;
+  border-radius: 2px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  height: 48px;
+  text-transform: uppercase;
+  width: 200px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.add-product-form .btn-primary:hover {
+  background-color: #e55b17;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Flipkart-style form header */
+.add-product-form .form-header {
+  background-color: #2874f0;
+  color: white;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 500;
+  margin: -20px -20px 20px -20px;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .add-product-form {
+    padding: 15px;
+  }
+
+  .add-product-form .btn-primary {
+    width: 100%;
+  }
+
+  .add-product-form .row {
+    margin-bottom: 10px;
+  }
+
+  .add-product-form .col-md-6 {
+    margin-bottom: 15px;
+  }
+}

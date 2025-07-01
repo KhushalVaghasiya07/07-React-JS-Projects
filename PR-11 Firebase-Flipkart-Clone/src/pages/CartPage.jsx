@@ -17,7 +17,10 @@ import EmptyCart from "../assets/EmptyCart.png"
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartId = "guest_cart";
+
+  // ⚠️ Replace this logic to use actual userId if user is logged in
+  const cartId = "guest_cart"; // or user.uid
+
   const { cartItems = [], loading, error } = useSelector((state) => state.cart || {});
   const [showModal, setShowModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
@@ -26,7 +29,7 @@ const CartPage = () => {
 
   useEffect(() => {
     dispatch(loadCart(cartId));
-  }, [dispatch]);
+  }, [dispatch, cartId]);
 
   const showMessage = (message) => {
     setToast({ show: true, message });
@@ -37,7 +40,7 @@ const CartPage = () => {
     try {
       await dispatch(updateQuantity(id, action, cartId));
       showMessage("Cart updated");
-    } catch (err) {
+    } catch {
       showMessage("Failed to update quantity");
     }
   };
@@ -51,7 +54,7 @@ const CartPage = () => {
         await dispatch(removeFromCart(itemToRemove, cartId));
         showMessage("Item removed");
       }
-    } catch (err) {
+    } catch {
       showMessage("Failed to remove item");
     }
     setShowModal(false);
@@ -115,30 +118,19 @@ const CartPage = () => {
             <img
               src={EmptyCart}
               alt="Empty Cart"
-              style={{
-                width: "200px",
-                height: "auto",
-                marginBottom: "20px",
-              }}
+              style={{ width: "200px", marginBottom: "20px" }}
             />
             <h4 className="fw-semibold mb-2">Your cart is empty!</h4>
             <p className="text-muted mb-4">Add items to it now.</p>
             <Button
               variant="primary"
               size="lg"
-              style={{
-                borderRadius: "4px",
-                padding: "8px 32px",
-                fontWeight: "500",
-              }}
               onClick={() => navigate("/")}
             >
               Shop now
             </Button>
           </div>
         </div>
-
-
       ) : (
         <>
           <Row className="mb-3 align-items-center">

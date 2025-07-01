@@ -1,5 +1,7 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from "../../firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore"; // 🆕
+
 
 export const LOAD_CART = "LOAD_CART";
 export const ADD_TO_CART = "ADD_TO_CART";
@@ -8,6 +10,7 @@ export const UPDATE_QUANTITY = "UPDATE_QUANTITY";
 export const CLEAR_CART = "CLEAR_CART";
 export const CART_ERROR = "CART_ERROR";
 export const LOADING_CART = "LOADING_CART";
+
 
 const getCartRef = (userId) => {
   if (!userId) throw new Error("User ID is required to access cart");
@@ -54,6 +57,9 @@ export const addToCart = (product, userId) => async (dispatch) => {
 
     await setDoc(cartRef, { items: updatedItems });
     dispatch({ type: ADD_TO_CART, payload: updatedItems });
+
+    // ✅ Reload cart to keep synced
+    dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
     console.error("🔥 addToCart error:", error.message);
@@ -71,6 +77,9 @@ export const removeFromCart = (productId, userId) => async (dispatch) => {
 
     await setDoc(cartRef, { items: updatedItems });
     dispatch({ type: REMOVE_FROM_CART, payload: updatedItems });
+
+    // ✅ Keep UI updated
+    dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
     console.error("🔥 removeFromCart error:", error.message);
@@ -96,6 +105,9 @@ export const updateQuantity = (productId, actionType, userId) => async (dispatch
 
     await setDoc(cartRef, { items: updatedItems });
     dispatch({ type: UPDATE_QUANTITY, payload: updatedItems });
+
+    // ✅ Refresh the cart
+    dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
     console.error("🔥 updateQuantity error:", error.message);
@@ -108,8 +120,33 @@ export const clearCart = (userId) => async (dispatch) => {
     const cartRef = getCartRef(userId);
     await setDoc(cartRef, { items: [] });
     dispatch({ type: CLEAR_CART, payload: [] });
+
+    // ✅ Sync again to confirm empty state
+    dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
     console.error("🔥 clearCart error:", error.message);
+  }
+};
+
+
+export const placeOrder = (userId, orderData) => async (dispatch) => {
+  try {
+    const ordersRef = collection(database, "userOrders");
+    const orderPayload = {
+      userId,
+      items: orderData.items,
+      total: orderData.total,
+      paymentMethod: orderData.paymentMethod || "cod",
+      createdAt: Timestamp.now(),
+    };
+
+    await addDoc(ordersRef, orderPayload);
+    console.log("✅ Order saved to Firestore");
+
+    // Clear cart after order placed
+    dispatch(clearCart(userId));
+  } catch (error) {
+    console.error("❌ placeOrder error:", error.message);
   }
 };

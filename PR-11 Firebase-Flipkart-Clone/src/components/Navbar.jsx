@@ -21,17 +21,7 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
     dispatch(loadCart('guest_cart'));
   }, [location.pathname, dispatch]);
 
-  const handleSearch = (e) => {
-    const keyword = e.target.value.toLowerCase();
-    setSearch(keyword);
 
-    const filtered = products.filter((item) =>
-      item.name.toLowerCase().includes(keyword)
-    );
-    setFiltered(filtered);
-
-    if (window.location.pathname !== '/') navigate('/');
-  };
 
   return (
     <header className="header-container p-3">
@@ -45,8 +35,6 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
             <input
               className="search-input"
               placeholder="Search for products, Brands and More"
-              value={search}
-              onChange={handleSearch}
             />
           </div>
         </div>

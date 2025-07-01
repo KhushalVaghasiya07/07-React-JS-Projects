@@ -5,13 +5,15 @@ import { fetchProductById, clearProductDetail } from '../redux/Actions/productAc
 import { addToCart } from '../redux/Actions/cartActions';
 import {
   Container, Row, Col, Button, Badge, Alert, Spinner,
-  Image, ListGroup, Toast
+  Image, ListGroup
 } from 'react-bootstrap';
 import {
   StarFill, StarHalf, Heart, HeartFill,
   Truck, ShieldCheck, ArrowLeft, CheckCircle
 } from 'react-bootstrap-icons';
 import { getAuth } from 'firebase/auth';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -22,7 +24,6 @@ const ProductDetail = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [mainImage, setMainImage] = useState('');
   const [thumbnailImages, setThumbnailImages] = useState([]);
-  const [showCartToast, setShowCartToast] = useState(false);
 
   useEffect(() => {
     if (id) dispatch(fetchProductById(id));
@@ -75,7 +76,14 @@ const ProductDetail = () => {
     };
 
     dispatch(addToCart(cartItem, cartId));
-    setShowCartToast(true);
+    toast.success(`${product.name} added to cart 🛒`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const handleImageClick = (img) => {
@@ -125,25 +133,12 @@ const ProductDetail = () => {
 
   return (
     <Container className="my-5 product-detail">
+      <ToastContainer />
       <Button variant="outline-secondary" onClick={() => navigate(-1)} className="mb-4">
         <ArrowLeft className="me-1" /> Back to Products
       </Button>
 
-      <Toast
-        onClose={() => setShowCartToast(false)}
-        show={showCartToast}
-        delay={3000}
-        autohide
-        style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
-      >
-        <Toast.Header>
-          <strong className="me-auto">Added to Cart</strong>
-        </Toast.Header>
-        <Toast.Body>{product.name} has been added to your cart!</Toast.Body>
-      </Toast>
-
       <Row className="g-4">
-        {/* Images */}
         <Col md={6} lg={5}>
           <div className="border rounded-3 p-3 mb-3 text-center bg-light">
             <Image
@@ -173,7 +168,6 @@ const ProductDetail = () => {
           </Row>
         </Col>
 
-        {/* Info */}
         <Col md={6} lg={7}>
           <div className="d-flex justify-content-between align-items-start mb-3">
             <div>

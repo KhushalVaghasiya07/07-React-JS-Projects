@@ -16,6 +16,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ProductDetail = () => {
+  const { user } = useSelector((state) => state.authReducer || {});
+
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -62,29 +64,46 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    if (!product) return;
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const cartId = user ? user.uid : "guest_cart";
+    if (user) {
+      if (!product) return;
 
-    const cartItem = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: 1
-    };
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      const cartId = currentUser ? currentUser.uid : "guest_cart";
 
-    dispatch(addToCart(cartItem, cartId));
-    toast.success(`${product.name} added to cart 🛒`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+      const cartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1
+      };
+
+      dispatch(addToCart(cartItem, cartId));
+      toast.success(`${product.name} added to cart 🛒`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } else {
+      toast.warn("Please login to add items to cart 😅", {
+        position: "top-right",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      setTimeout(() => {
+        navigate("/Sign_In");
+      }, 2500); // Let user see the toast before redirect
+    }
   };
+
 
   const handleImageClick = (img) => {
     setMainImage(img);

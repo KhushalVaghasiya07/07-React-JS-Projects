@@ -4,7 +4,7 @@ import {
   applyMiddleware,
   compose
 } from 'redux';
-import {thunk} from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import {
   productListReducer,
@@ -12,12 +12,14 @@ import {
   productCategoryReducer
 } from './Reducers/productReducer';
 import { cartReducer } from './Reducers/cartReducer';
+import authReducer from './Reducers/authReducer'; // ✅ import it
 
 const rootReducer = combineReducers({
   productList: productListReducer,
   productDetail: productDetailsReducer,
   productCategory: productCategoryReducer,
   cart: cartReducer,
+  authReducer, // ✅ finally added
 });
 
 const middleware = [thunk];

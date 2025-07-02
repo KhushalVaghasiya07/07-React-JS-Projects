@@ -10,13 +10,13 @@ export const CLEAR_CART = "CLEAR_CART";
 export const CART_ERROR = "CART_ERROR";
 export const LOADING_CART = "LOADING_CART";
 
-// Helper to get Firestore doc ref
+// Firestore doc reference
 const getCartRef = (userId) => {
-  if (!userId) throw new Error("❗User ID required to access cart");
+  if (!userId) throw new Error("User ID required to access cart");
   return doc(database, "userCarts", userId);
 };
 
-// Load Cart from Firestore
+// Load Cart
 export const loadCart = (userId = "guest_cart") => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -31,11 +31,11 @@ export const loadCart = (userId = "guest_cart") => async (dispatch) => {
     }
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
-    console.error("🔥 loadCart error:", error.message);
+    console.error("loadCart error:", error.message);
   }
 };
 
-// Add Item to Cart
+// Add to Cart
 export const addToCart = (product, userId = "guest_cart") => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -56,11 +56,11 @@ export const addToCart = (product, userId = "guest_cart") => async (dispatch) =>
     dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
-    console.error("🔥 addToCart error:", error.message);
+    console.error("addToCart error:", error.message);
   }
 };
 
-// Remove Item from Cart
+// Remove from Cart
 export const removeFromCart = (productId, userId = "guest_cart") => async (dispatch) => {
   try {
     dispatch({ type: LOADING_CART });
@@ -74,7 +74,7 @@ export const removeFromCart = (productId, userId = "guest_cart") => async (dispa
     dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
-    console.error("🔥 removeFromCart error:", error.message);
+    console.error("removeFromCart error:", error.message);
   }
 };
 
@@ -101,7 +101,7 @@ export const updateQuantity = (productId, actionType, userId = "guest_cart") => 
     dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
-    console.error("🔥 updateQuantity error:", error.message);
+    console.error("updateQuantity error:", error.message);
   }
 };
 
@@ -115,7 +115,7 @@ export const clearCart = (userId = "guest_cart") => async (dispatch) => {
     dispatch(loadCart(userId));
   } catch (error) {
     dispatch({ type: CART_ERROR, payload: error.message });
-    console.error("🔥 clearCart error:", error.message);
+    console.error("clearCart error:", error.message);
   }
 };
 
@@ -132,9 +132,9 @@ export const placeOrder = (userId, orderData) => async (dispatch) => {
     };
 
     await addDoc(ordersRef, newOrder);
-    console.log("✅ Order placed successfully");
+    console.log("Order placed successfully");
     dispatch(clearCart(userId));
   } catch (error) {
-    console.error("❌ placeOrder error:", error.message);
+    console.error("placeOrder error:", error.message);
   }
 };

@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form, Container, Card, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
-import { AiOutlineMail, AiOutlineLock } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { googleSignInAsync, signInAsync } from '../../redux/Actions/authActions';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './SignIn.css'; // We'll create this CSS file
+import './SignIn.css';
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -63,7 +62,6 @@ const SignIn = () => {
             <Form.Group className="mb-3 position-relative">
               <Form.Label>Email</Form.Label>
               <div className="position-relative">
-                <AiOutlineMail className="position-absolute input-icon" />
                 <Form.Control
                   type="email"
                   placeholder="Enter Email"
@@ -80,7 +78,6 @@ const SignIn = () => {
             <Form.Group className="mb-3 position-relative">
               <Form.Label>Password</Form.Label>
               <div className="position-relative">
-                <AiOutlineLock className="position-absolute input-icon" />
                 <Form.Control
                   type="password"
                   placeholder="Enter Password"

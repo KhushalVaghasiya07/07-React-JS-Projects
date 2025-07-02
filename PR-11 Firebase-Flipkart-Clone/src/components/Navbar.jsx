@@ -5,11 +5,11 @@ import { BsCart3, BsThreeDotsVertical, BsPersonCircle } from 'react-icons/bs';
 import { Button, NavDropdown, Badge } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCart } from '../redux/Actions/cartActions';
-import { logoutUser } from '../redux/Actions/authActions'; // ✅ import logout action
+import { logoutUser } from '../redux/Actions/authActions';
 import logo from '../assets/Flip_Card_logo.svg';
 import './Header.css';
-import { toast } from 'react-toastify';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Header = ({ products = [], setFiltered = () => { } }) => {
@@ -22,7 +22,10 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
   const { user } = useSelector((state) => state.authReducer || {});
   const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
 
-
+  useEffect(() => {
+    const userId = user?.uid || 'guest_cart';
+    dispatch(loadCart(userId));
+  }, [user, location.pathname, dispatch]);
 
   const handleProtectedClick = () => {
     if (!user) {
@@ -35,25 +38,26 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
 
   const handleCartClick = () => {
     if (!user) {
-      toast.info("Please login to See Cart!");
+      toast.info("Please login to see your cart!");
       navigate('/Sign_In');
     } else {
       navigate('/cart');
     }
   };
 
-  useEffect(() => {
-    const userId = user?.uid || 'guest_cart';
-    dispatch(loadCart(userId));
-  }, [user, location.pathname, dispatch]);
-
   const handleLogout = () => {
     dispatch(logoutUser());
-    navigate('/'); // go to homepage after logout
+    toast.success("You have been logged out!", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+    navigate('/');
   };
 
   return (
     <header className="header-container p-3">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="header-top d-flex justify-content-between align-items-center container">
         <div className="d-flex align-items-center right-side gap-3">
           <Link to="/">
@@ -97,21 +101,36 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
               <>
                 <NavDropdown.Item>
                   <span className="fw-semibold">New Customer?</span>
-                  <Link to="/Sign_Up" className="ms-2 text-primary text-decoration-none">Sign Up</Link>
+                  <Link to="/Sign_Up" className="ms-2 text-primary text-decoration-none">
+                    Sign Up
+                  </Link>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item as={Link} to="/Sign_In" className="text-dark">Sign In</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/Sign_In" className="text-dark">
+                  Sign In
+                </NavDropdown.Item>
               </>
             )}
 
             {user?.email && (
               <>
                 <NavDropdown.Divider />
-                <NavDropdown.Item as={Link} to="#" className="text-dark">My Profile</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="#" className="text-dark">Flipkart Plus Zone</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="#" className="text-dark">Orders</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="#" className="text-dark">Wishlist</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="#" className="text-dark">Gift Cards</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="#" className="text-dark">
+                  My Profile
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="#" className="text-dark">
+                  Flipkart Plus Zone
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/my-orders" className="text-dark">
+                  Orders
+                </NavDropdown.Item>
+
+                <NavDropdown.Item as={Link} to="#" className="text-dark">
+                  Wishlist
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="#" className="text-dark">
+                  Gift Cards
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleLogout} className="text-danger fw-semibold">
                   Logout
@@ -123,7 +142,7 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
           <div
             onClick={handleCartClick}
             className="position-relative text-dark text-decoration-none d-flex align-items-center"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             <BsCart3 className="me-1 fs-5" />
             Cart
@@ -143,7 +162,6 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
             )}
           </div>
 
-
           <Button
             size="sm"
             className="btn btn-warning fw-semibold text-dark"
@@ -151,7 +169,6 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
           >
             + Add Product
           </Button>
-
 
           <BsThreeDotsVertical className="fs-5" />
         </div>

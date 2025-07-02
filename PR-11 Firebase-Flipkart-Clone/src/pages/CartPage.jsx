@@ -12,14 +12,15 @@ import {
   updateQuantity,
   clearCart
 } from "../redux/Actions/cartActions";
-import EmptyCart from "../assets/EmptyCart.png"
+import EmptyCart from "../assets/EmptyCart.png";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ⚠️ Replace this logic to use actual userId if user is logged in
-  const cartId = "guest_cart"; // or user.uid
+  // ✅ Fetch current user from Redux
+  const user = useSelector((state) => state.authReducer.user);
+  const cartId = user?.uid || "guest_cart";
 
   const { cartItems = [], loading, error } = useSelector((state) => state.cart || {});
   const [showModal, setShowModal] = useState(false);
@@ -27,8 +28,11 @@ const CartPage = () => {
   const [coupon, setCoupon] = useState({ code: "", applied: false });
   const [toast, setToast] = useState({ show: false, message: "" });
 
+  // ✅ Load cart when user changes or cartId updates
   useEffect(() => {
-    dispatch(loadCart(cartId));
+    if (cartId) {
+      dispatch(loadCart(cartId));
+    }
   }, [dispatch, cartId]);
 
   const showMessage = (message) => {

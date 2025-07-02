@@ -11,15 +11,20 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const cartId = "guest_cart"; // Replace this logic with real user ID if available
-  const { cartItems, loading, error } = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.authReducer.user);
+  const cartId = user?.uid || "guest_cart";
+
+  const { cartItems = [], loading, error } = useSelector((state) => state.cart);
 
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("cod");
 
   useEffect(() => {
-    dispatch(loadCart(cartId));
+    if (cartId) {
+      dispatch(loadCart(cartId));
+    }
   }, [dispatch, cartId]);
+
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const delivery = subtotal > 500 ? 0 : 40;
@@ -95,9 +100,7 @@ const CheckoutPage = () => {
       </Button>
 
       <Row>
-        {/* Left Column - Delivery and Payment */}
         <Col md={8}>
-          {/* Delivery Address Card */}
           <Card className="mb-3 shadow-sm address-card">
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -118,7 +121,6 @@ const CheckoutPage = () => {
             </Card.Body>
           </Card>
 
-          {/* Payment Method */}
           <Card className="mb-3 shadow-sm">
             <Card.Body>
               <h5 className="mb-3">Payment Method</h5>
@@ -160,7 +162,6 @@ const CheckoutPage = () => {
             </Card.Body>
           </Card>
 
-          {/* Order Summary */}
           <Card className="mb-3 shadow-sm">
             <Card.Body>
               <h3 className="mb-4">Order Summary ({cartItems.length} Items)</h3>
@@ -199,7 +200,6 @@ const CheckoutPage = () => {
           </Card>
         </Col>
 
-        {/* Right Column - Price Summary */}
         <Col md={4}>
           <Card className="shadow-sm price-summary-card sticky-top">
             <Card.Body>

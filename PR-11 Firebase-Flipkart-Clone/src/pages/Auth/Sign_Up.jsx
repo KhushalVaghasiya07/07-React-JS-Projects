@@ -84,7 +84,6 @@ const SignUp = () => {
                     <Form.Group className="mb-3 form-group-custom">
                       <Form.Label className="form-label-custom">Email</Form.Label>
                       <div className="input-group-custom">
-                        <AiOutlineMail className="input-icon" />
                         <Form.Control
                           type="email"
                           placeholder="Enter Email"
@@ -101,7 +100,6 @@ const SignUp = () => {
                     <Form.Group className="mb-3 form-group-custom">
                       <Form.Label className="form-label-custom">Password</Form.Label>
                       <div className="input-group-custom">
-                        <AiOutlineLock className="input-icon" />
                         <Form.Control
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter Password"
@@ -125,7 +123,6 @@ const SignUp = () => {
                     <Form.Group className="mb-4 form-group-custom">
                       <Form.Label className="form-label-custom">Confirm Password</Form.Label>
                       <div className="input-group-custom">
-                        <AiOutlineLock className="input-icon" />
                         <Form.Control
                           type={showConfirmPassword ? "text" : "password"}
                           placeholder="Confirm Password"

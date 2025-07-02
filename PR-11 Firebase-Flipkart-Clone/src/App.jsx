@@ -9,6 +9,7 @@ import Header from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import CheckoutPage from './components/CheckoutPage.jsx';
 import SignIn from './pages/Auth/Sign_In.jsx';
+import MyOrders from './pages/Auth/MyOrders.jsx';
 import SignUp from './pages/Auth/Sign_Up.jsx';
 import { checkAuthStateAsync } from './redux/Actions/authActions';
 
@@ -33,6 +34,8 @@ const App = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/Sign_In" element={<SignIn />} />
           <Route path="/Sign_Up" element={<SignUp />} />
+          <Route path="/my-orders" element={<MyOrders />} />
+
         </Routes>
       </main>
 

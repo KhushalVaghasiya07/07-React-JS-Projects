@@ -1,35 +1,56 @@
 // src/pages/OrdersPage.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Row, Col, Card, Spinner, Alert, Image, Badge, Table } from "react-bootstrap";
-import { fetchUserOrders } from "../redux/Actions/orderActions";
-import { BsBoxSeam, BsCheckCircle } from "react-icons/bs";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Alert,
+  Image,
+  Badge,
+  Table,
+} from "react-bootstrap";
+import { fetchUserOrders, fetchGuestOrders } from "../../redux/Actions/orderActions"
+import { BsBoxSeam } from "react-icons/bs";
 
 const OrdersPage = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth || {});
+  const { user } = useSelector((state) => state.authReducer || {});
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // In OrdersPage.jsx
   useEffect(() => {
-    const guestId = localStorage.getItem('guestId');
-    if (guestId) {
-      const loadOrders = async () => {
-        try {
-          setLoading(true);
-          const guestOrders = await dispatch(fetchGuestOrders(guestId));
-          setOrders(guestOrders);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
+    const loadOrders = async () => {
+      setLoading(true);
+      try {
+        let fetchedOrders = [];
+
+        if (user?.uid) {
+          const result = await dispatch(fetchUserOrders(user.uid));
+
+          fetchedOrders = result.payload || [];
+        } else {
+          const guestId = localStorage.getItem("guestId");
+          if (guestId) {
+            const result = await dispatch(fetchGuestOrders(guestId));
+            fetchedOrders = result.payload || [];
+          }
         }
-      };
-      loadOrders();
-    }
-  }, [dispatch]);
+
+        setOrders(fetchedOrders);
+      } catch (err) {
+        setError(err.message || "Failed to fetch orders");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadOrders();
+  }, [dispatch, user]);
 
   if (loading) {
     return (
@@ -104,11 +125,12 @@ const OrdersPage = () => {
             </Table>
           </Card.Body>
           <Card.Footer className="text-end">
-            <h5>
-              Order Total: ₹{order.total.toLocaleString()}
-            </h5>
+            <h5>Order Total: ₹{order.total.toLocaleString()}</h5>
             <small className="text-muted">
-              Ordered on: {new Date(order.createdAt?.toDate()).toLocaleString()}
+              Ordered on:{" "}
+              {order.createdAt?.toDate
+                ? new Date(order.createdAt.toDate()).toLocaleString()
+                : new Date(order.createdAt).toLocaleString()}
             </small>
           </Card.Footer>
         </Card>

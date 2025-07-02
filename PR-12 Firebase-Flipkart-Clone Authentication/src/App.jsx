@@ -7,6 +7,9 @@ import Header from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import CheckoutPage from './components/CheckoutPage.jsx';
 
+import Sign_Up from './pages/Auth/Sign_Up';
+import Sign_In from './pages/Auth/Sign_In';
+
 const App = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -20,6 +23,9 @@ const App = () => {
           <Route path="/add_product" element={<AddProductForm />} />
           <Route path="/add-product/:id" element={<AddProductForm />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          {/* ✅ Auth Routes */}
+          <Route path="/Sign_Up" element={<Sign_Up />} />
+          <Route path="/Sign_In" element={<Sign_In />} />
         </Routes>
       </main>
 

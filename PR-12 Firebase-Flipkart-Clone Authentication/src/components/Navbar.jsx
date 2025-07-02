@@ -61,15 +61,19 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
             className="d-flex align-items-center"
           >
             <NavDropdown.Item>
-              <span className="fw-semibold">New Customer? </span>
-              <Link to="#" className="ms-2 text-primary">Sign Up</Link>
+              <span className="fw-semibold">New Customer?</span>
+              <Link to="/Sign_Up" className="ms-2 text-primary text-decoration-none">Sign Up</Link>
             </NavDropdown.Item>
+
             <NavDropdown.Divider />
-            <NavDropdown.Item>My Profile</NavDropdown.Item>
-            <NavDropdown.Item>Flipkart Plus Zone</NavDropdown.Item>
-            <NavDropdown.Item>Orders</NavDropdown.Item>
-            <NavDropdown.Item>Wishlist</NavDropdown.Item>
-            <NavDropdown.Item>Gift Cards</NavDropdown.Item>
+
+            <NavDropdown.Item as={Link} to="/Sign_In" className="text-dark">Sign In</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="#" className="text-dark">My Profile</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="#" className="text-dark">Flipkart Plus Zone</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="#" className="text-dark">Orders</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="#" className="text-dark">Wishlist</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="#" className="text-dark">Gift Cards</NavDropdown.Item>
+
           </NavDropdown>
 
 

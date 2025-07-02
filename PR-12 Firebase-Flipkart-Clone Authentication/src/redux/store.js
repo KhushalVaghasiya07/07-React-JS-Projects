@@ -1,12 +1,10 @@
-// src/redux/store.js
-
 import {
   createStore,
-  combineReducers, // Keep combineReducers here
+  combineReducers,
   applyMiddleware,
   compose
 } from 'redux';
-import {thunk} from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 import {
   productListReducer,
@@ -14,16 +12,14 @@ import {
   productCategoryReducer
 } from './Reducers/productReducer';
 import { cartReducer } from './Reducers/cartReducer';
-// ✅ Import the new authReducer
-import authReducer from './Reducers/authReducer'; // Adjust path if needed
+import authReducer from './Reducers/authReducer'; // ✅ Imported your authReducer
 
 const rootReducer = combineReducers({
   productList: productListReducer,
   productDetail: productDetailsReducer,
   productCategory: productCategoryReducer,
   cart: cartReducer,
-  // ✅ Add the authReducer here
-  auth: authReducer,
+  authReducer: authReducer, // ✅ Registered in root reducer
 });
 
 const middleware = [thunk];

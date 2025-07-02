@@ -24,29 +24,8 @@ export const cartReducer = (state = initialState, action) => {
       };
 
     case LOAD_CART:
-      return {
-        ...state,
-        cartItems: action.payload,
-        loading: false,
-        error: null,
-      };
-
     case ADD_TO_CART:
-      return {
-        ...state,
-        cartItems: action.payload,
-        loading: false,
-        error: null,
-      };
-
     case REMOVE_FROM_CART:
-      return {
-        ...state,
-        cartItems: action.payload,
-        loading: false,
-        error: null,
-      };
-
     case UPDATE_QUANTITY:
       return {
         ...state,

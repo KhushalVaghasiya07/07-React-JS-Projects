@@ -11,6 +11,7 @@ import {
 } from "../redux/Actions/productActions";
 
 const CategoryCarousel = ({ title, category, showAd }) => {
+  const { user } = useSelector((state) => state.authReducer || {});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -48,16 +49,25 @@ const CategoryCarousel = ({ title, category, showAd }) => {
   };
 
   const handleEdit = (product) => {
-    navigate(`/add-product/${product.id || product.docId}`, {
-      state: { product },
-    });
+   if (user) {
+     navigate(`/add-product/${product.id || product.docId}`, {
+       state: { product },
+     });
+   } else {
+     navigate("/Sign_In");
+
+   }
   };
 
   const handleDelete = (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      dispatch(deleteProduct(productId)).then(() => {
-        dispatch(fetchProductsByCategory(category));
-      });
+    if (user) {
+      if (window.confirm("Are you sure you want to delete this product?")) {
+        dispatch(deleteProduct(productId)).then(() => {
+          dispatch(fetchProductsByCategory(category));
+        });
+      }
+    } else {
+      navigate("/Sign_In");
     }
   };
 

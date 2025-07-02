@@ -12,14 +12,14 @@ import {
   productCategoryReducer
 } from './Reducers/productReducer';
 import { cartReducer } from './Reducers/cartReducer';
-import authReducer from './Reducers/authReducer'; // ✅ Imported your authReducer
+import authReducer from './Reducers/authReducer'; // ✅ import it
 
 const rootReducer = combineReducers({
   productList: productListReducer,
   productDetail: productDetailsReducer,
   productCategory: productCategoryReducer,
   cart: cartReducer,
-  authReducer: authReducer, // ✅ Registered in root reducer
+  authReducer, // ✅ finally added
 });
 
 const middleware = [thunk];

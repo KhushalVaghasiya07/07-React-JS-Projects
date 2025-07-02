@@ -1,17 +1,18 @@
 // src/redux/Actions/orderActions.js
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 import { database } from "../../firebase";
-import { clearCart } from "./cartActions";
+// import { clearCart } from "./cartActions";
 
 // src/redux/Actions/orderActions.js
-export const createOrder = (items, total, guestId) => async () => {
+export const createOrder = (items, total, guestId = null, userId = null) => async () => {
   try {
     const orderData = {
       guestId,
+      userId,
       items,
       total,
       status: "processing",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     };
 
     const docRef = await addDoc(collection(database, "orders"), orderData);
@@ -21,6 +22,7 @@ export const createOrder = (items, total, guestId) => async () => {
     throw error;
   }
 };
+
 
 export const fetchGuestOrders = (guestId) => async () => {
   try {
@@ -34,6 +36,21 @@ export const fetchGuestOrders = (guestId) => async () => {
     }));
   } catch (error) {
     console.error("Error fetching orders:", error);
+    throw error;
+  }
+};
+
+export const fetchUserOrders = (userId) => async () => {
+  try {
+    const q = query(collection(database, "orders"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate()
+    }));
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
     throw error;
   }
 };

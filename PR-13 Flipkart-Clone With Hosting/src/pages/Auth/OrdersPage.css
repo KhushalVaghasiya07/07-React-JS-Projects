@@ -1,0 +1,80 @@
+.orders-container {
+  max-width: 1200px;
+}
+
+.order-card {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.order-card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.order-item {
+  transition: background-color 0.2s;
+}
+
+.order-item:hover {
+  background-color: #f9f9f9;
+}
+
+.product-image {
+  max-height: 120px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+}
+
+.accordion-button {
+  background-color: white !important;
+}
+
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.empty-orders-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+/* Flipkart-like status badges */
+.badge-processing {
+  background-color: #fff8e1;
+  color: #ff6f00;
+}
+
+.badge-shipped {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.badge-delivered {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .order-card {
+    border-radius: 0;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .accordion-button {
+    padding: 15px;
+  }
+}

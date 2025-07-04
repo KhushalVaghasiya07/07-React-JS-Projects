@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
 import { BsCart3, BsThreeDotsVertical, BsPersonCircle } from 'react-icons/bs';
-import { Button, NavDropdown, Badge } from 'react-bootstrap';
+import { MdOutlineStorefront } from "react-icons/md";
+import { Button, NavDropdown, Badge, Dropdown } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCart } from '../redux/Actions/cartActions';
 import { logoutUser } from '../redux/Actions/authActions';
@@ -10,7 +11,6 @@ import logo from '../assets/Flip_Card_logo.svg';
 import './Header.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 const Header = ({ products = [], setFiltered = () => { } }) => {
   const [search, setSearch] = useState('');
@@ -54,14 +54,31 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
     navigate('/');
   };
 
+  const getAvatarContent = () => {
+    if (user?.email) {
+      return (
+        <div className="avatar-circle">
+          {user.email.charAt(0).toUpperCase()}
+        </div>
+      );
+    }
+    return (
+      <BsPersonCircle
+        size={20}
+        className="account-icon"
+      />
+    );
+  };
+
   return (
     <header className="header-container p-3">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="header-top d-flex justify-content-between align-items-center container">
+      {/* Desktop View */}
+      <div className="header-top d-none d-md-flex justify-content-between align-items-center container">
         <div className="d-flex align-items-center right-side gap-3">
           <Link to="/">
-            <img src={logo} alt="logo" width="90" />
+            <img src={logo} alt="logo" width="90" className="logo-img" />
           </Link>
           <div className="search-bar d-flex align-items-center">
             <IoSearchOutline className="search-icon fs-5" />
@@ -74,28 +91,16 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
           </div>
         </div>
 
-        <div className="d-flex align-items-center gap-5">
+        <div className="d-flex align-items-center gap-5 header-right-section">
           <NavDropdown
             title={
-              <div className="d-flex align-items-center gap-2">
-                <BsPersonCircle
-                  size={20}
-                  style={{
-                    color: '#2874f0',
-                    backgroundColor: '#fff',
-                    borderRadius: '50%',
-                    border: '1px solid #ccc',
-                    padding: '2px',
-                  }}
-                />
-                <span className="fw-semibold text-dark">
-                  {user?.email ? user.email : 'Account'}
-                </span>
+              <div className="d-flex align-items-center gap-1 account-dropdown-toggle">
+                {getAvatarContent()}
               </div>
             }
             id="account-dropdown"
             menuVariant="light"
-            className="d-flex align-items-center"
+            align="end"
           >
             {!user?.email && (
               <>
@@ -114,6 +119,13 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
 
             {user?.email && (
               <>
+                <div className="dropdown-user-info px-3 py-2">
+                  <div className="avatar-circle-large">
+                    {user.email.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="user-email">{user.email}</div>
+                </div>
+                <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="#" className="text-dark">
                   My Profile
                 </NavDropdown.Item>
@@ -123,7 +135,6 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
                 <NavDropdown.Item as={Link} to="/my-orders" className="text-dark">
                   Orders
                 </NavDropdown.Item>
-
                 <NavDropdown.Item as={Link} to="#" className="text-dark">
                   Wishlist
                 </NavDropdown.Item>
@@ -138,23 +149,23 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
             )}
           </NavDropdown>
 
+          <Link to="/" className="text-dark d-flex align-items-center seller-link text-decoration-none">
+            <MdOutlineStorefront className="me-1 fs-5" />
+            <span className="d-none d-md-inline">Become a Seller</span>
+          </Link>
+
           <div
             onClick={handleCartClick}
-            className="position-relative text-dark text-decoration-none d-flex align-items-center"
+            className="position-relative text-dark text-decoration-none d-flex align-items-center cart-icon"
             style={{ cursor: 'pointer' }}
           >
             <BsCart3 className="me-1 fs-5" />
-            Cart
+            <span className="cart-text">Cart</span>
             {cartCount > 0 && (
               <Badge
                 pill
                 bg="danger"
-                className="position-absolute"
-                style={{
-                  fontSize: '0.65rem',
-                  top: '-13px',
-                  right: '-10px',
-                }}
+                className="position-absolute cart-badge"
               >
                 {cartCount}
               </Badge>
@@ -163,16 +174,76 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
 
           <Button
             size="sm"
-            className="btn btn-warning fw-semibold text-dark"
+            className="btn btn-warning fw-semibold text-dark add-product-btn"
             onClick={handleProtectedClick}
           >
-            {user ? (<Link className='text-dark' to="/add_product">+ Add Product</Link>) : (
-              <Link className='text-dark'  to="/Sign_In">Login</Link>
-            )}
+            {user ? '+ Add Product' : 'Login'}
           </Button>
 
-          <BsThreeDotsVertical className="fs-5" />
+          <BsThreeDotsVertical className="fs-5 more-icon" />
         </div>
+      </div>
+
+      {/* Mobile View */}
+      <div className="d-flex d-md-none align-items-center justify-content-between mobile-header">
+        {/* Logo */}
+        <Link to="/" className="mobile-logo">
+          <img src={logo} alt="logo" width="70" />
+        </Link>
+
+        {/* Search Bar */}
+        <div className="mobile-search-bar d-flex align-items-center">
+          <IoSearchOutline className="search-icon fs-5" />
+          <input
+            className="search-input"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        {/* Mobile Dropdown */}
+        <Dropdown className="mobile-dropdown">
+          <Dropdown.Toggle variant="light" id="mobile-dropdown-toggle">
+            <BsThreeDotsVertical className="fs-5" />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu align="end" className="mobile-dropdown-menu">
+            <Dropdown.Item as={Link} to="#" className="d-flex align-items-center">
+              {getAvatarContent()}
+              <span className="ms-2">{user ? 'Account' : 'Login'}</span>
+            </Dropdown.Item>
+
+            <Dropdown.Item onClick={handleCartClick} className="d-flex align-items-center">
+              <BsCart3 className="me-2 fs-5" />
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <Badge pill bg="danger" className="ms-2">
+                  {cartCount}
+                </Badge>
+              )}
+            </Dropdown.Item>
+
+            <Dropdown.Item onClick={handleProtectedClick} className="d-flex align-items-center">
+              <span>{user ? '+ Add Product' : 'Login'}</span>
+            </Dropdown.Item>
+
+            <Dropdown.Item as={Link} to="/" className="d-flex align-items-center">
+              <MdOutlineStorefront className="me-2 fs-5" />
+              <span>Seller</span>
+            </Dropdown.Item>
+
+            {user?.email && (
+              <>
+                <Dropdown.Divider />
+                <Dropdown.Item as={Link} to="/my-orders">My Orders</Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout} className="text-danger">
+                  Logout
+                </Dropdown.Item>
+              </>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     </header>
   );

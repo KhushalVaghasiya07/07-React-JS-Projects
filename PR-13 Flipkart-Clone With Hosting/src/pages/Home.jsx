@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Carousel } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import "./Home.css"
 
 import Slider_1 from "../assets/Slider-1.webp";
 import Slider_2 from "../assets/Slider-2.webp";
@@ -34,24 +35,21 @@ const Home = () => {
       <Carousel className="mb-4 custom-carousel" interval={3000} slide={true}>
         {sliderImages.map((img, index) => (
           <Carousel.Item key={index}>
-            <img
-              className="d-block w-100"
-              src={img}
-              alt={`Slide ${index + 1}`}
-              style={{
-                height: "320px",
-                objectFit: "cover",
-                borderRadius: "5px",
-                transition: "transform 1s ease-in-out",
-              }}
-            />
+            <div className="carousel-img-wrapper">
+              <img
+                className="carousel-img"
+                src={img}
+                alt={`Slide ${index + 1}`}
+              />
+            </div>
           </Carousel.Item>
+
         ))}
       </Carousel>
 
       <CategoryCarousel
         title="Best of Electronics"
-        category="electronics" 
+        category="electronics"
         showAd={true}
       />
 

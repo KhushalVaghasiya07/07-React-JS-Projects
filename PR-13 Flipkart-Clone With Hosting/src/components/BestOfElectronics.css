@@ -219,6 +219,20 @@
   right: 0;
 }
 
+.product-carousel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 10px;
+  gap: 12px;
+}
+
+.product-card-wrapper {
+  width: 48%;
+}
+
 @media (max-width: 1199px) {
   .best-electronics-section.has-ad {
     padding-right: 0;
@@ -249,5 +263,97 @@
 
   .product-card {
     min-height: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .carousel-container {
+    padding: 0 10px;
+    background: #f5f5f5;
+    /* grey background */
+    border-radius: 10px;
+  }
+
+  .product-carousel {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0;
+    padding: 10px 0;
+    gap: 12px;
+  }
+
+  .product-carousel .col {
+    flex: 0 0 48%;
+    max-width: 48%;
+    margin-bottom: 16px;
+    padding: 0 5px;
+  }
+
+  .product-card {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-image-container {
+    height: 120px;
+    border-radius: 8px;
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .product-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .product-name {
+    font-size: 14px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    min-height: 35px;
+    text-align: center;
+  }
+
+  .price-section {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+
+  .current-price {
+    color: #388e3c;
+    font-weight: 600;
+  }
+
+  .original-price {
+    color: #878787;
+    text-decoration: line-through;
+    font-size: 12px;
+  }
+
+  .discount {
+    color: #388e3c;
+    font-size: 12px;
+  }
+
+  .scroll-btn {
+    display: none;
   }
 }

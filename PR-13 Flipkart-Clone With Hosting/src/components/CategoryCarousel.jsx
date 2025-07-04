@@ -99,9 +99,9 @@ const CategoryCarousel = ({ title, category, showAd }) => {
             )}
 
             <div className="product-carousel-wrapper">
-              <Row className="product-carousel">
+              <div className="product-carousel">
                 {visibleProducts.map((item) => (
-                  <Col key={item.id || item.docId} xs={6} sm={4} md={3} lg={2}>
+                  <div key={item.id || item.docId} className="product-card-wrapper">
                     <div className="product-card">
                       <Link
                         to={`/product/${item.id || item.docId}`}
@@ -160,9 +160,10 @@ const CategoryCarousel = ({ title, category, showAd }) => {
                         </div>
                       </Link>
                     </div>
-                  </Col>
+                  </div>
                 ))}
-              </Row>
+              </div>
+
             </div>
 
             {visibleIndex + itemsPerPage <
@@ -189,6 +190,7 @@ const CategoryCarousel = ({ title, category, showAd }) => {
       </div>
     </div>
   );
+
 };
 
 export default CategoryCarousel;

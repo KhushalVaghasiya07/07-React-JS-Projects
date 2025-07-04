@@ -114,7 +114,6 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
 
             {user?.email && (
               <>
-                <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="#" className="text-dark">
                   My Profile
                 </NavDropdown.Item>
@@ -167,7 +166,9 @@ const Header = ({ products = [], setFiltered = () => { } }) => {
             className="btn btn-warning fw-semibold text-dark"
             onClick={handleProtectedClick}
           >
-            + Add Product
+            {user ? (<Link className='text-dark' to="/add_product">+ Add Product</Link>) : (
+              <Link className='text-dark'  to="/Sign_In">Login</Link>
+            )}
           </Button>
 
           <BsThreeDotsVertical className="fs-5" />

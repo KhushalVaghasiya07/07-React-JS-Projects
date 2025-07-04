@@ -6,6 +6,8 @@ import { clearCart, loadCart } from "../redux/Actions/cartActions";
 import { CheckCircleFill, ArrowLeft, ShieldCheck, GeoAlt, CreditCard, Cash } from "react-bootstrap-icons";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createOrder } from "../redux/Actions/orderActions";
+
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
@@ -32,7 +34,14 @@ const CheckoutPage = () => {
 
   const handlePlaceOrder = async () => {
     try {
+      const userId = user?.uid || null;
+      const guestId = !user?.uid ? localStorage.getItem("guestId") : null;
+
+      await dispatch(createOrder(cartItems, total, guestId, user?.uid));
+
+
       await dispatch(clearCart(cartId));
+
       setOrderSuccess(true);
       toast.success("Order placed successfully!");
       setTimeout(() => navigate("/"), 4000);
@@ -40,6 +49,8 @@ const CheckoutPage = () => {
       toast.error("Failed to place order. Try again later.");
     }
   };
+
+
 
   if (loading) {
     return (

@@ -9,14 +9,15 @@ const initialState = {
   user: null,
   isCreated: false,
   errorMSG: "",
+  logoutStatus: false, // ✅ added this
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case SIGN_IN_SUCCESS:
-      return { ...state, user: action.payload, isCreated: false, errorMSG: "" };
+      return { ...state, user: action.payload, isCreated: false, errorMSG: "", logoutStatus: false };
     case SIGN_OUT_SUCCESS:
-      return { ...state, user: null };
+      return { ...state, user: null, logoutStatus: true }; // ✅ set to true on logout
     case SIGN_UP_SUCCESS:
       return { ...state, isCreated: true };
     case SET_AUTH_ERROR:

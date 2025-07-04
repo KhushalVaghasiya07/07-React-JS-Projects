@@ -9,6 +9,8 @@ import {
   fetchProductsByCategory,
   deleteProduct,
 } from "../redux/Actions/productActions";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CategoryCarousel = ({ title, category, showAd }) => {
   const { user } = useSelector((state) => state.authReducer || {});
@@ -49,14 +51,14 @@ const CategoryCarousel = ({ title, category, showAd }) => {
   };
 
   const handleEdit = (product) => {
-   if (user) {
-     navigate(`/add-product/${product.id || product.docId}`, {
-       state: { product },
-     });
-   } else {
-     navigate("/Sign_In");
-
-   }
+    if (user) {
+      navigate(`/add-product/${product.id || product.docId}`, {
+        state: { product },
+      });
+      toast.info("Editing product...", { position: "top-right" });
+    } else {
+      navigate("/Sign_In");
+    }
   };
 
   const handleDelete = (productId) => {
@@ -64,6 +66,9 @@ const CategoryCarousel = ({ title, category, showAd }) => {
       if (window.confirm("Are you sure you want to delete this product?")) {
         dispatch(deleteProduct(productId)).then(() => {
           dispatch(fetchProductsByCategory(category));
+          toast.success("Product deleted successfully", {
+            position: "top-right",
+          });
         });
       }
     } else {
@@ -73,6 +78,8 @@ const CategoryCarousel = ({ title, category, showAd }) => {
 
   return (
     <div className="electronics-wrapper">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className={`best-electronics-section ${showAd ? "has-ad" : ""}`}>
         <div className="electronic-cards">
           <h2>{title}</h2>
@@ -102,8 +109,12 @@ const CategoryCarousel = ({ title, category, showAd }) => {
                       >
                         <div className="product-image-container">
                           <img
-                            src={item.image}
-                            alt={item.name}
+                            src={
+                              item.image && item.image !== ""
+                                ? item.image
+                                : "https://via.placeholder.com/150?text=No+Image"
+                            }
+                            alt={item.name || "Product Image"}
                             className="product-image"
                           />
                         </div>
@@ -124,26 +135,28 @@ const CategoryCarousel = ({ title, category, showAd }) => {
                               </span>
                             )}
                           </div>
-                          <div className="action-links">
-                            <button
-                              className="action-btn"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleEdit(item);
-                              }}
-                            >
-                              <FiEdit size={16} />
-                            </button>
-                            <button
-                              className="action-btn"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleDelete(item.id);
-                              }}
-                            >
-                              <FiTrash2 size={16} />
-                            </button>
-                          </div>
+                          {user && (
+                            <div className="action-links">
+                              <button
+                                className="action-btn"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEdit(item);
+                                }}
+                              >
+                                <FiEdit size={16} />
+                              </button>
+                              <button
+                                className="action-btn"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(item.id);
+                                }}
+                              >
+                                <FiTrash2 size={16} />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </Link>
                     </div>

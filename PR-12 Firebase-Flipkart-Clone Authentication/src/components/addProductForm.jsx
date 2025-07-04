@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "./addProductForm.css";
 
 import { database } from "../firebase";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import { ImageUploading } from "../redux/cloudinary";
 
 const AddProduct = () => {
   const { id } = useParams();
@@ -12,6 +13,7 @@ const AddProduct = () => {
   const location = useLocation();
   const isEditMode = Boolean(id);
   const product = location.state?.product || null;
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -41,6 +43,21 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleUploadImg = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const UploadURL = await ImageUploading(file);
+      if (UploadURL) {
+        setFormData((prev) => ({ ...prev, image: UploadURL }));
+      } else {
+        alert("Image uploading Failed");
+      }
+    }
+  };
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,24 +144,31 @@ const AddProduct = () => {
                 >
                   <option value="">Select a category</option>
                   {categories.map((cat, idx) => (
-                    <option key={idx} value={cat}>
+                    <option key={idx} value={cat.toLowerCase()}>
                       {cat}
                     </option>
                   ))}
                 </Form.Select>
+
               </Form.Group>
             </Col>
             <Col md={6}>
               <Form.Group controlId="productImage">
-                <Form.Label>Image URL</Form.Label>
+                <Form.Label>Upload Image</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="file"
                   name="image"
-                  value={formData.image}
-                  onChange={handleChange}
+                  onChange={handleUploadImg}
                   placeholder="Paste image URL"
-                  required
+                  required={!isEditMode}
                 />
+
+                {formData.image && (
+                  <div class="Imagedetails">
+                    <img src={formData.image} style={{ width: "100px" }} />
+                    {/* <p>{form}</p> */}
+                  </div>
+                 )}
               </Form.Group>
             </Col>
           </Row>
